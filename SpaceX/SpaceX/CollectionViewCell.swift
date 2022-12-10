@@ -11,7 +11,7 @@ class CollectionViewCell: UICollectionViewCell {
     
     static var identifier = "CollectionViewCell"
     
-    private lazy var amountLabel: UILabel = {
+    lazy var amountLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
@@ -21,7 +21,7 @@ class CollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private lazy var heightLabel: UILabel = {
+    lazy var heightLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
@@ -42,7 +42,7 @@ class CollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-
+//        contentView.backgroundColor = .red
     }
     
     required init?(coder: NSCoder) {
@@ -72,8 +72,8 @@ class CollectionViewCell: UICollectionViewCell {
         
         NSLayoutConstraint.activate([
             mainView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
-            mainView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
-            mainView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
+            mainView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 24),
+            mainView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
             mainView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
             
             amountLabel.centerYAnchor.constraint(equalTo: mainView.centerYAnchor, constant: -10),
