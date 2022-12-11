@@ -11,7 +11,17 @@ class CollectionViewCell: UICollectionViewCell {
     
     static var identifier = "CollectionViewCell"
     
-    private let arrayOfValues = ["Height, m", "Diameter, m", "Mass, kg", "Payload, kg"]
+    let userDefaults = UserDefaults.standard
+    
+    private lazy var height: String = {
+        if self.userDefaults.bool(forKey: "HeightKey") {
+            return "m"
+        } else {
+            return "ft"
+        }
+    }()
+    
+    private lazy var arrayOfValues = ["Height, \(self.height)", "Diameter, m", "Mass, kg", "Payload, kg"]
     
     private lazy var amountLabel: UILabel = {
         let label = UILabel()

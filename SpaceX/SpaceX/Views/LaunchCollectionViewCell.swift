@@ -13,7 +13,6 @@ class LaunchCollectionViewCell: UICollectionViewCell {
     
     private lazy var rocketImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "rocket")
         imageView.tintColor = .gray
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
@@ -23,7 +22,6 @@ class LaunchCollectionViewCell: UICollectionViewCell {
     
     lazy var topLabel: UILabel = {
         let label = UILabel()
-        label.text = "FalconSat"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
         label.textAlignment = .left
@@ -34,7 +32,6 @@ class LaunchCollectionViewCell: UICollectionViewCell {
     
     lazy var bottomLabel: UILabel = {
         let label = UILabel()
-        label.text = "2 February, 2022"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
         label.textAlignment = .left
@@ -57,6 +54,17 @@ class LaunchCollectionViewCell: UICollectionViewCell {
         setupConstraint()
     }
     
+    public func configure(launch: Launch) {
+        self.topLabel.text = launch.name ?? "huy"
+        let date = launch.date_local?.dropLast(15) ?? "pizda"
+        self.bottomLabel.text = String(date).formattedDate(withFormat: "MMM dd, yyyy")
+        if launch.success == true {
+            self.rocketImage.image = UIImage(named: "rocket")
+        } else {
+            self.rocketImage.image = UIImage(named: "rocketX")
+        }
+    }
+    
     private func setupConstraint() {
         contentView.addSubview(mainView)
         mainView.addSubview(topLabel)
@@ -70,7 +78,7 @@ class LaunchCollectionViewCell: UICollectionViewCell {
             mainView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
             
             topLabel.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 24),
-            topLabel.widthAnchor.constraint(equalToConstant: 100),
+            topLabel.widthAnchor.constraint(equalToConstant: 200),
             topLabel.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: 24),
             
             bottomLabel.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: 8),

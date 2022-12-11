@@ -9,13 +9,14 @@ import Foundation
 
 // MARK: - RocketModel
 struct Rocket: Decodable {
-    let height, diameter: Diameter?
+    let height: Diameter?
+    let diameter: Diameter?
     let mass: Mass?
     let first_stage: FirstStage?
     let second_stage: SecondStage?
     let engines: Engines?
     let landingLegs: LandingLegs?
-    let payload_weights: [PayloadWeight]?
+    let payload_weights: [Mass]?
     let flickr_images: [String]?
     let name, type: String?
     let active: Bool?
@@ -25,12 +26,10 @@ struct Rocket: Decodable {
     let welcomeDescription, id: String?
 }
 
-extension Rocket {
-    // MARK: - Diameter
-    struct Diameter: Decodable {
-        let meters, feet: Double?
-    }
+struct Diameter: Decodable {
+    let meters, feet: Double?
 }
+
 
 extension Rocket {
     // MARK: - Engines
@@ -79,11 +78,8 @@ extension Rocket {
     }
 }
 
-extension Rocket {
-    // MARK: - Mass
-    struct Mass: Decodable {
-        let kg, lb: Int?
-    }
+struct Mass: Decodable {
+    let kg, lb: Int?
 }
 
 extension Rocket {
@@ -117,6 +113,6 @@ extension Rocket {
 extension Rocket.Payloads {
     // MARK: - CompositeFairing
     struct CompositeFairing: Decodable {
-        let height, diameter: Rocket.Diameter?
+        let height, diameter: Diameter?
     }
 }

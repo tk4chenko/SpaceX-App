@@ -11,6 +11,7 @@ import SDWebImage
 class RocketViewController: UIViewController {
     
     var index = Int()
+    var id = String()
     
     lazy var contentViewSize = CGSize(width: view.frame.width, height: view.frame.height * 1.6)
 
@@ -97,16 +98,21 @@ class RocketViewController: UIViewController {
         return button
     }()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         NetworkManager.shared.loadRockets(index: self.index) { rocket in
+            self.id = rocket.id ?? "no id"
             self.label.text = rocket.name
             guard let url = URL(string: rocket.flickr_images?.first ?? "") else { return }
             self.backgroundImage.sd_imageIndicator = SDWebImageActivityIndicator.gray
             self.backgroundImage.sd_setImage(with: url, completed: nil)
             self.myCollectionView.reloadData()
         }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
         myCollectionView.delegate = self
         myCollectionView.dataSource = self
@@ -114,7 +120,6 @@ class RocketViewController: UIViewController {
         myCollectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: CollectionViewCell.identifier)
         myCollectionView.register(SecondCollectionViewCell.self, forCellWithReuseIdentifier: SecondCollectionViewCell.identifier)
         myCollectionView.register(Header.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Header.headerID)
-        
     }
     
     private func firstSectionLayout() -> NSCollectionLayoutSection {
@@ -179,8 +184,9 @@ class RocketViewController: UIViewController {
     }
     
     @objc func buttonAction() {
-        let viewController = LaunchesViewController()
-        self.navigationController?.pushViewController(viewController, animated: true)
+        let vc = LaunchesViewController()
+        vc.configure(id: self.id)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     override func viewDidLayoutSubviews() {

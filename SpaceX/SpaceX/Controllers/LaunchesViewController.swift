@@ -8,12 +8,36 @@
 import UIKit
 
 class LaunchesViewController: UIViewController {
+    
+    var id = String()
 
     private lazy var launchesCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .clear
+        collectionView.backgroundColor = .black
         return collectionView
+    }()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        NetworkManager.shared.loadLaunches(id: self.id) { launches in
+            if launches.count == 0 {
+                self.label.alpha = 1
+            }
+            self.launchesCollectionView.reloadData()
+        }
+    }
+    
+    private lazy var label: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 1
+        label.text = "So far there have been no launches."
+        label.alpha = 0
+        label.textAlignment = .center
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        return label
     }()
     
     override func viewDidLoad() {
@@ -26,9 +50,9 @@ class LaunchesViewController: UIViewController {
         nav?.tintColor = UIColor.white
         
         title = "Launches"
-        
-        
+    
         view.addSubview(launchesCollectionView)
+        view.addSubview(label)
         
         launchesCollectionView.frame = view.bounds
         
@@ -38,13 +62,16 @@ class LaunchesViewController: UIViewController {
         launchesCollectionView.register(LaunchCollectionViewCell.self, forCellWithReuseIdentifier: LaunchCollectionViewCell.identifier)
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupConstraints()
+    }
+    
     private func createLayout() -> UICollectionViewCompositionalLayout {
             let itemSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
                 heightDimension: .fractionalHeight(1.0))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            
-            
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(116))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
             group.contentInsets.bottom = 16
@@ -55,20 +82,33 @@ class LaunchesViewController: UIViewController {
             let layout = UICollectionViewCompositionalLayout(section: section)
             return layout
         }
+    
+    func configure(id: String) {
+        self.id = id
+    }
+    
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            label.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
+            label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
+        ])
+    }
 }
 
 extension LaunchesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        let launches = NetworkManager.shared.arrayOfLaunches
+        return launches.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LaunchCollectionViewCell.identifier, for: indexPath) as? LaunchCollectionViewCell else { return UICollectionViewCell() }
-//        cell.leftLabel.text = thirdSectionArray[indexPath.row]
-//        cell.rightLabel.text = thirdfSectionArray2[indexPath.row]
+        let launches = NetworkManager.shared.arrayOfLaunches
+        cell.configure(launch: launches[indexPath.row])
         return cell
     }
-    
     
 }

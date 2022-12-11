@@ -9,11 +9,15 @@ import Foundation
 import Alamofire
 
 class NetworkManager {
-
+    
     static let shared = NetworkManager()
+    
+    let userDefaults = UserDefaults.standard
     
     var arrayOfRockets = [Rocket]()
     var arrayOfLaunches = [Launch]()
+    
+    var id = String()
     
     var firstSectionArray = [Double]()
     var secondSectionArray = [String]()
@@ -27,16 +31,24 @@ class NetworkManager {
                 let data = try response.result.get()
                 self.arrayOfRockets = data
                 
-//                MARK: - First array
+                self.id = data[index].id ?? ""
+                
+                //                MARK: - First array
                 var firstArrray = [Double]()
-                firstArrray.append(data[index].height?.meters ?? 0)
+                
+                if self.userDefaults.bool(forKey: "HeightKey") {
+                    firstArrray.append(data[index].height?.meters ?? 0)
+                } else {
+                    firstArrray.append(data[index].height?.feet ?? 0)
+                }
+                
                 firstArrray.append(data[index].diameter?.meters ?? 0)
                 firstArrray.append(Double(data[index].mass?.kg ?? 0))
                 firstArrray.append(Double(data[index].payload_weights?[0].kg ?? 0))
                 self.firstSectionArray = firstArrray
                 firstArrray.removeAll()
                 
-//                MARK: - Second array
+                //                MARK: - Second array
                 var secondArray = [String]()
                 secondArray.append(data[index].first_flight?.formattedDate(withFormat: "MMM dd, yyyy") ?? "HUY")
                 secondArray.append(data[index].country ?? "")
@@ -44,7 +56,7 @@ class NetworkManager {
                 self.secondSectionArray = secondArray
                 secondArray.removeAll()
                 
-//                MARK: - Third array
+                //                MARK: - Third array
                 var thirdArray = [String]()
                 thirdArray.append(String(data[index].first_stage?.engines ?? 0))
                 thirdArray.append(String(Int(data[index].first_stage?.fuel_amount_tons ?? 0)) + " ton")
@@ -52,7 +64,7 @@ class NetworkManager {
                 self.firstStageSection = thirdArray
                 thirdArray.removeAll()
                 
-//                MARK: - Fourth array
+                //                MARK: - Fourth array
                 var fourthArray = [String]()
                 fourthArray.append(String(data[index].second_stage?.engines ?? 0))
                 fourthArray.append(String(Int(data[index].second_stage?.fuel_amount_tons ?? 0)) + " ton")
@@ -68,14 +80,15 @@ class NetworkManager {
         }
     }
     
-    func loadLaunches(completion: @escaping () -> Void) {
+    func loadLaunches(id: String, completion: @escaping ([Launch]) -> Void) {
         let genresRequest = AF.request("https://api.spacexdata.com/v4/launches", method: .get)
         genresRequest.responseDecodable(of: [Launch].self) { response in
             do {
                 let data = try response.result.get()
-                self.arrayOfLaunches = data
-                print(data)
-                completion()
+                self.arrayOfLaunches = data.filter({ launch in
+                    return launch.rocket == id
+                })
+                completion(self.arrayOfLaunches)
             }
             catch {
                 print("error: \(error)")
