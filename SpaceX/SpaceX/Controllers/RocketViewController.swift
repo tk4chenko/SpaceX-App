@@ -6,19 +6,22 @@
 //
 
 import UIKit
+import SDWebImage
 
 class RocketViewController: UIViewController {
     
-    lazy var contentViewSize = CGSize(width: view.frame.width, height: view.frame.height * 1.35)
+    var index = Int()
     
-    let arrayOfAmounts = ["229.6", "39.9", "3,125,735", "140,660"]
-    let arrayOfValues = ["Height, ft", "Diameter, ft", "Mass, lb"]
-    let seconfSectionArray = ["First start", "County", "Launch cost"]
-    let seconfSectionArray2 = ["7 February, 2018", "USA", "$90 mln"]
+    lazy var contentViewSize = CGSize(width: view.frame.width, height: view.frame.height * 1.6)
+
+    init(index: Int) {
+        super.init(nibName: nil, bundle: nil)
+        self.index = index
+    }
     
-    let thirdSectionArray = ["Number of engines", "Fuel quantity", "Сombustion time"]
-    let thirdfSectionArray2 = ["27", "308, 6", "593"]
-    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private lazy var myCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
@@ -49,18 +52,8 @@ class RocketViewController: UIViewController {
     
     private lazy var backgroundImage: UIImageView = {
         let imageView = UIImageView()
-        
-        imageView.image = UIImage(named: "nasa")
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
-        return imageView
-    }()
-    
-    private lazy var logoImage: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "SpaceXlogo")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleToFill
         return imageView
     }()
     
@@ -74,7 +67,6 @@ class RocketViewController: UIViewController {
     
     private lazy var label: UILabel = {
         let label = UILabel()
-        label.text = "Falcon Heavy"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
         label.textAlignment = .left
@@ -97,7 +89,6 @@ class RocketViewController: UIViewController {
     private lazy var button: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-//        button.backgroundColor = .green
         button.setTitle("See launches", for: .normal)
         button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16.0, weight: .bold)
@@ -106,19 +97,17 @@ class RocketViewController: UIViewController {
         return button
     }()
     
-    var rocket: Rocket?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NetworkManager.shared.loadRockets {
+        NetworkManager.shared.loadRockets(index: self.index) { rocket in
+            self.label.text = rocket.name
+            guard let url = URL(string: rocket.flickr_images?.first ?? "") else { return }
+            self.backgroundImage.sd_imageIndicator = SDWebImageActivityIndicator.gray
+            self.backgroundImage.sd_setImage(with: url, completed: nil)
             self.myCollectionView.reloadData()
         }
         
-        NetworkManager.shared.loadLaunches {
-            self.myCollectionView.reloadData()
-        }
-
         myCollectionView.delegate = self
         myCollectionView.dataSource = self
         
@@ -201,7 +190,6 @@ class RocketViewController: UIViewController {
     
     private func setupConstraints() {
         view.addSubview(backgroundImage)
-//        view.addSubview(logoImage)
         view.addSubview(scrollView)
         scrollView.addSubview(containerView)
         scrollView.addSubview(button)
@@ -214,21 +202,16 @@ class RocketViewController: UIViewController {
             containerView.widthAnchor.constraint(equalToConstant: scrollView.frame.width),
             containerView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0),
             containerView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0),
-            
-//            logoImage.widthAnchor.constraint(equalToConstant: 120),
-//            logoImage.heightAnchor.constraint(equalToConstant: 35),
-//            logoImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            logoImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -44),
-//
-            backgroundImage.widthAnchor.constraint(equalToConstant: view.frame.width),
-            backgroundImage.heightAnchor.constraint(equalToConstant: view.frame.height),
+    
+            backgroundImage.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
+            backgroundImage.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             backgroundImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
             backgroundImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             
-            mainView.widthAnchor.constraint(equalToConstant: containerView.frame.width),
+            mainView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             mainView.heightAnchor.constraint(equalToConstant: contentViewSize.height),
             mainView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 0),
-            mainView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: view.frame.height / 3),
+            mainView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: view.frame.height / 2),
             
             myCollectionView.heightAnchor.constraint(equalToConstant: 680),
             myCollectionView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 32),
@@ -254,7 +237,6 @@ class RocketViewController: UIViewController {
 extension RocketViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Header.headerID, for: indexPath) as! Header
     
         if indexPath.section == 2 {
@@ -262,66 +244,43 @@ extension RocketViewController: UICollectionViewDelegate, UICollectionViewDataSo
         } else {
             header.label.text = "SECOND STAGE"
         }
-        
         return header
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 {
-            return NetworkManager.shared.arrayOfDiameter.count
+            return NetworkManager.shared.firstSectionArray.count
         } else {
             return NetworkManager.shared.secondSectionArray.count
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         if indexPath.section == 0 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as? CollectionViewCell else { return
                 UICollectionViewCell() }
-//            if let rocket = NetworkManager.shared.arrayOfRockets.first {
-//                cell.configureCell(rocket: rocket)
-//            }
-            
-            let value = NetworkManager.shared.arrayOfDiameter
-            cell.amountLabel.text = String(value[indexPath.row])
-            cell.heightLabel.text = arrayOfValues[indexPath.row]
+            let value = NetworkManager.shared.firstSectionArray
+            cell.configureCell(amounts: value, indexPath: indexPath)
             return cell
         } else if indexPath.section == 1 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SecondCollectionViewCell.identifier, for: indexPath) as? SecondCollectionViewCell else { return UICollectionViewCell() }
-            cell.leftLabel.text = seconfSectionArray[indexPath.row]
-            cell.rightLabel.text = NetworkManager.shared.secondSectionArray[indexPath.row]
+            let value = NetworkManager.shared.secondSectionArray
+            cell.configure(section: .second, value: value, indexPath: indexPath)
             return cell
         } else if indexPath.section == 2 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SecondCollectionViewCell.identifier, for: indexPath) as? SecondCollectionViewCell else { return UICollectionViewCell() }
-            cell.leftLabel.text = thirdSectionArray[indexPath.row]
-            cell.rightLabel.text = String(NetworkManager.shared.firstStageSection[indexPath.row])
+            let value = NetworkManager.shared.firstStageSection
+            cell.configure(section: .stage, value: value, indexPath: indexPath)
             return cell
         } else {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SecondCollectionViewCell.identifier, for: indexPath) as? SecondCollectionViewCell else { return UICollectionViewCell() }
-            cell.leftLabel.text = thirdSectionArray[indexPath.row]
-            cell.rightLabel.text = thirdfSectionArray2[indexPath.row]
+            let value = NetworkManager.shared.secondStageSection
+            cell.configure(section: .stage, value: value, indexPath: indexPath)
             return cell
         }
-        
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 4
-    }
-    
-}
-
-extension String {
-    func formattedDateFromString(withFormat format: String) -> String? {
-        let inputFormatter = DateFormatter()
-        inputFormatter.dateFormat = "yyyy-MM-dd"
-        if let date = inputFormatter.date(from: self) {
-            let outputFormatter = DateFormatter()
-            outputFormatter.dateFormat = format
-            outputFormatter.locale = Locale(identifier: "en_US_POSIX")
-            return outputFormatter.string(from: date)
-        }
-        return nil
     }
 }

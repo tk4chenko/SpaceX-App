@@ -11,7 +11,9 @@ class CollectionViewCell: UICollectionViewCell {
     
     static var identifier = "CollectionViewCell"
     
-    lazy var amountLabel: UILabel = {
+    private let arrayOfValues = ["Height, m", "Diameter, m", "Mass, kg", "Payload, kg"]
+    
+    private lazy var amountLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
@@ -21,7 +23,7 @@ class CollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var heightLabel: UILabel = {
+    private lazy var heightLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
@@ -40,23 +42,9 @@ class CollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-//        contentView.backgroundColor = .red
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-    }
-    
-    public func configureCell(rocket: Rocket) {
-        amountLabel.text = "\(rocket.height?.meters ?? 0)"
-        heightLabel.text = "Height, m"
+    public func configureCell(amounts: [Double], indexPath: IndexPath) {
+        amountLabel.text = String(amounts[indexPath.row])
+        heightLabel.text = arrayOfValues[indexPath.row]
     }
     
     override func layoutSubviews() {

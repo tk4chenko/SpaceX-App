@@ -17,8 +17,6 @@ class LaunchCollectionViewCell: UICollectionViewCell {
         imageView.tintColor = .gray
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
-//        let tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.tappedMe))
-//        imageView.addGestureRecognizer(tap)
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
@@ -53,20 +51,6 @@ class LaunchCollectionViewCell: UICollectionViewCell {
         view.layer.backgroundColor = UIColor(red: 0.129, green: 0.129, blue: 0.129, alpha: 1).cgColor
         return view
     }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-//        contentView.backgroundColor = .red
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-    }
     
     override func layoutSubviews() {
         super.layoutSubviews()

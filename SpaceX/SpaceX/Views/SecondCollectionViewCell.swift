@@ -7,11 +7,19 @@
 
 import UIKit
 
+enum Section {
+    case second
+    case stage
+}
+
 class SecondCollectionViewCell: UICollectionViewCell {
     
     static var identifier = "SecondCollectionViewCell"
     
-    lazy var leftLabel: UILabel = {
+    private let secondSectionArray = ["First start", "County", "Launch cost"]
+    private let stageSectionArray = ["Number of engines", "Fuel quantity", "Сombustion time"]
+    
+    private lazy var leftLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
@@ -21,7 +29,7 @@ class SecondCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var rightLabel: UILabel = {
+    private lazy var rightLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
@@ -35,27 +43,23 @@ class SecondCollectionViewCell: UICollectionViewCell {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.frame = contentView.bounds
-//        view.layer.backgroundColor = UIColor(red: 0.129, green: 0.129, blue: 0.129, alpha: 1).cgColor
         return view
     }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-//        contentView.backgroundColor = .red
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-    }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         setupConstraint()
+    }
+    
+    public func configure(section: Section, value: [String], indexPath: IndexPath) {
+        rightLabel.text = value[indexPath.row]
+        switch section {
+        case .second:
+            leftLabel.text = secondSectionArray[indexPath.row]
+        case .stage:
+            leftLabel.text = stageSectionArray[indexPath.row]
+        }
+        
     }
     
     private func setupConstraint() {
@@ -78,7 +82,7 @@ class SecondCollectionViewCell: UICollectionViewCell {
             rightLabel.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: 0),
             rightLabel.leadingAnchor.constraint(equalTo: leftLabel.trailingAnchor, constant: 0),
             rightLabel.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -16)
-            
         ])
     }
 }
+

@@ -23,12 +23,10 @@ class SettingsViewController: UIViewController {
     private lazy var button: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-//        button.backgroundColor = .green
         button.setTitle("Close", for: .normal)
         button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16.0, weight: .bold)
         button.layer.cornerRadius = 12
-//        button.layer.backgroundColor = UIColor(red: 0.129, green: 0.129, blue: 0.129, alpha: 1).cgColor
         return button
     }()
     
@@ -43,8 +41,7 @@ class SettingsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = .black
+        view.backgroundColor = UIColor(red: 0.071, green: 0.071, blue: 0.071, alpha: 1)
     }
     
     private func setupConstraints() {
@@ -60,19 +57,7 @@ class SettingsViewController: UIViewController {
             button.widthAnchor.constraint(equalToConstant: 50),
             button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
             button.heightAnchor.constraint(equalToConstant: 40)
-        
-            
-            
         ])
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

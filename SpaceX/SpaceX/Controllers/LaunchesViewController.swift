@@ -39,7 +39,6 @@ class LaunchesViewController: UIViewController {
     }
     
     private func createLayout() -> UICollectionViewCompositionalLayout {
-            //        let spacing: CGFloat = 8
             let itemSize = NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
                 heightDimension: .fractionalHeight(1.0))
@@ -54,10 +53,8 @@ class LaunchesViewController: UIViewController {
             let section = NSCollectionLayoutSection(group: group)
         section.contentInsets.top = 40
             let layout = UICollectionViewCompositionalLayout(section: section)
-//                    section.orthogonalScrollingBehavior = .continuous
             return layout
         }
-
 }
 
 extension LaunchesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
