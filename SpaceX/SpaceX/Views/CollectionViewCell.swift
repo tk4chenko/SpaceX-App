@@ -54,16 +54,15 @@ class CollectionViewCell: UICollectionViewCell {
         
     }
     
+    public func configureCell(rocket: Rocket) {
+        amountLabel.text = "\(rocket.height?.meters ?? 0)"
+        heightLabel.text = "Height, m"
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         setupConstraint()
     }
-    
-        public func configute() {
-            amountLabel.text = "229.6"
-            heightLabel.text = "Height, ft"
-    
-        }
     
     private func setupConstraint() {
         contentView.addSubview(mainView)
@@ -72,8 +71,8 @@ class CollectionViewCell: UICollectionViewCell {
         
         NSLayoutConstraint.activate([
             mainView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
-            mainView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 24),
-            mainView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
+            mainView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 16),
+            mainView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             mainView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
             
             amountLabel.centerYAnchor.constraint(equalTo: mainView.centerYAnchor, constant: -10),
@@ -83,7 +82,6 @@ class CollectionViewCell: UICollectionViewCell {
             heightLabel.topAnchor.constraint(equalTo: amountLabel.bottomAnchor, constant: 8),
             heightLabel.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -8),
             heightLabel.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: 8)
-            
         ])
     }
 }
