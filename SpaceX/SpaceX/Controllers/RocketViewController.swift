@@ -13,8 +13,8 @@ class RocketViewController: UIViewController {
     var index = Int()
     var id = String()
     
-    lazy var contentViewSize = CGSize(width: view.frame.width, height: view.frame.height * 1.6)
-
+    lazy var contentViewSize = CGSize(width: view.frame.width, height: view.frame.height * 1.59)
+    
     init(index: Int) {
         super.init(nibName: nil, bundle: nil)
         self.index = index
@@ -29,6 +29,23 @@ class RocketViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
         return collectionView
+    }()
+    
+    private lazy var navView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .black
+        return view
+    }()
+    
+    private lazy var navLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 1
+        label.textAlignment = .center
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        return label
     }()
     
     private lazy var mainView: UIView = {
@@ -102,6 +119,7 @@ class RocketViewController: UIViewController {
         super.viewWillAppear(animated)
         
         NetworkManager.shared.loadRockets(index: self.index) { rocket in
+            self.navLabel.text = rocket.name
             self.id = rocket.id ?? "no id"
             self.label.text = rocket.name
             guard let url = URL(string: rocket.flickr_images?.first ?? "") else { return }
@@ -111,9 +129,23 @@ class RocketViewController: UIViewController {
         }
     }
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let targetHeight = view.frame.height / 2 + label.frame.height
+        
+        let offset = scrollView.contentOffset.y / targetHeight
+        let offset2 = (scrollView.contentOffset.y - view.frame.height / 2) /  (label.frame.height + 48)
+//        print(offset2)
+        
+//        let clearToBlack = UIColor(red: 0, green: 0, blue: 0, alpha: offset)
+        let clearToWhite = UIColor(red: 1, green: 1, blue: 1, alpha: offset2)
+        
+        navLabel.textColor = clearToWhite
+        self.navView.alpha = offset
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         myCollectionView.delegate = self
         myCollectionView.dataSource = self
         
@@ -191,6 +223,7 @@ class RocketViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+//        navView.addBlur(style: .dark)
         setupConstraints()
     }
     
@@ -203,12 +236,14 @@ class RocketViewController: UIViewController {
         mainView.addSubview(label)
         scrollView.addSubview(settingsImage)
         scrollView.addSubview(myCollectionView)
+        view.addSubview(navView)
+        navView.addSubview(navLabel)
         
         NSLayoutConstraint.activate([
             containerView.widthAnchor.constraint(equalToConstant: scrollView.frame.width),
             containerView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0),
             containerView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0),
-    
+            
             backgroundImage.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             backgroundImage.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             backgroundImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
@@ -235,7 +270,14 @@ class RocketViewController: UIViewController {
             settingsImage.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -35),
             settingsImage.centerYAnchor.constraint(equalTo: label.centerYAnchor),
             settingsImage.widthAnchor.constraint(equalToConstant: 32),
-            settingsImage.heightAnchor.constraint(equalToConstant: 32)
+            settingsImage.heightAnchor.constraint(equalToConstant: 32),
+            
+            navView.topAnchor.constraint(equalTo: view.topAnchor),
+            navView.heightAnchor.constraint(equalToConstant: 90),
+            navView.widthAnchor.constraint(equalToConstant: view.frame.width),
+            
+            navLabel.widthAnchor.constraint(equalToConstant: view.frame.width),
+            navLabel.topAnchor.constraint(equalTo: navView.topAnchor, constant: 60)
         ])
     }
     
@@ -244,7 +286,7 @@ extension RocketViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Header.headerID, for: indexPath) as! Header
-    
+        
         if indexPath.section == 2 {
             header.label.text = "FIRST STAGE"
         } else {
@@ -288,5 +330,15 @@ extension RocketViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 4
+    }
+}
+
+extension UIView {
+    func addBlur(style: UIBlurEffect.Style) {
+        let blurEffect = UIBlurEffect(style: style)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = self.bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.addSubview(blurEffectView)
     }
 }

@@ -75,7 +75,7 @@ class SecondCollectionViewCell: UICollectionViewCell {
             
             leftLabel.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 0),
             leftLabel.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: 0),
-            leftLabel.widthAnchor.constraint(equalToConstant: 150),
+            leftLabel.trailingAnchor.constraint(equalTo: rightLabel.leadingAnchor, constant: 0),
             leftLabel.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: 32),
             
             rightLabel.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 0),

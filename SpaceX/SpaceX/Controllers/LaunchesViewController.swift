@@ -28,6 +28,11 @@ class LaunchesViewController: UIViewController {
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NetworkManager.shared.arrayOfLaunches.removeAll()
+    }
+    
     private lazy var label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -45,11 +50,9 @@ class LaunchesViewController: UIViewController {
         
         view.backgroundColor = .black
         
-        let nav = self.navigationController?.navigationBar
-        nav?.barStyle = UIBarStyle.black
-        nav?.tintColor = UIColor.white
-        
         title = "Launches"
+        
+        navigationController?.navigationBar.tintColor = UIColor.white
     
         view.addSubview(launchesCollectionView)
         view.addSubview(label)
