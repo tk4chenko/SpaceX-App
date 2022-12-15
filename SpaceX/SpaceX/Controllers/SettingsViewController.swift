@@ -9,6 +9,8 @@ import UIKit
 
 class SettingsViewController: UIViewController {
     
+    var delegate: RefreshViewDelegate?
+    
     let userDefaults = UserDefaults.standard
     let heightKey = "HeightKey"
     
@@ -64,6 +66,13 @@ class SettingsViewController: UIViewController {
         return button
     }()
     
+    private lazy var myView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.addBlur(style: .systemChromeMaterialDark)
+        return view
+    }()
+    
     @objc func heightSwitchChange(_ sender:UISwitch!) {
         if (sender.isOn == true){
             self.heightLabel.text = "M"
@@ -76,6 +85,7 @@ class SettingsViewController: UIViewController {
     }
     
     @objc func buttonAction() {
+        delegate?.refreshView()
         self.dismiss(animated: true)
     }
     
@@ -87,8 +97,16 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         checkSwitchState()
-        view.backgroundColor = UIColor(red: 0.071, green: 0.071, blue: 0.071, alpha: 1)
+        view.addSubview(myView)
+        myView.frame = view.bounds
+        view.backgroundColor = .clear
     }
+    
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        guard let firstVC = presentedViewController as? RocketViewController else { return }
+//        firstVC.myCollectionView.reloadData()
+//    }
     
     private func checkSwitchState() {
         if userDefaults.bool(forKey: heightKey) {

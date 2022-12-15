@@ -8,7 +8,11 @@
 import UIKit
 import SDWebImage
 
-class RocketViewController: UIViewController {
+protocol RefreshViewDelegate {
+    func refreshView()
+}
+
+class RocketViewController: UIViewController, RefreshViewDelegate{
     
     var index = Int()
     var id = String()
@@ -24,7 +28,7 @@ class RocketViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var myCollectionView: UICollectionView = {
+    public lazy var myCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
@@ -34,7 +38,7 @@ class RocketViewController: UIViewController {
     private lazy var navView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .black
+        view.addBlur(style: .systemChromeMaterialDark)
         return view
     }()
     
@@ -44,7 +48,7 @@ class RocketViewController: UIViewController {
         label.numberOfLines = 1
         label.textAlignment = .center
         label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
         return label
     }()
     
@@ -115,9 +119,48 @@ class RocketViewController: UIViewController {
         return button
     }()
     
+    func refreshView() {
+        myCollectionView.reloadData()
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        let targetHeight = view.frame.height / 2 + label.frame.height
+        
+        let offset = ((scrollView.contentOffset.y - view.frame.height / 2) + 100) / (label.frame.height + 48)
+        let offset2 = (scrollView.contentOffset.y - view.frame.height / 2) / (label.frame.height + 48)
+//        print(offset2)
+        
+//        let clearToBlack = UIColor(red: 0, green: 0, blue: 0, alpha: offset)
+        let clearToWhite = UIColor(red: 1, green: 1, blue: 1, alpha: offset2)
+        
+//        if offset > 1 {
+//            offset = 1
+//        }
+//        print(offset)
+        
+        navLabel.textColor = clearToWhite
+        navView.alpha = offset
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        fetchData()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+//        fetchData()
         
+        myCollectionView.delegate = self
+        myCollectionView.dataSource = self
+        
+        myCollectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: CollectionViewCell.identifier)
+        myCollectionView.register(SecondCollectionViewCell.self, forCellWithReuseIdentifier: SecondCollectionViewCell.identifier)
+        myCollectionView.register(Header.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Header.headerID)
+    }
+    
+    func fetchData() {
         NetworkManager.shared.loadRockets(index: self.index) { rocket in
             self.navLabel.text = rocket.name
             self.id = rocket.id ?? "no id"
@@ -127,31 +170,6 @@ class RocketViewController: UIViewController {
             self.backgroundImage.sd_setImage(with: url, completed: nil)
             self.myCollectionView.reloadData()
         }
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let targetHeight = view.frame.height / 2 + label.frame.height
-        
-        let offset = scrollView.contentOffset.y / targetHeight
-        let offset2 = (scrollView.contentOffset.y - view.frame.height / 2) /  (label.frame.height + 48)
-//        print(offset2)
-        
-//        let clearToBlack = UIColor(red: 0, green: 0, blue: 0, alpha: offset)
-        let clearToWhite = UIColor(red: 1, green: 1, blue: 1, alpha: offset2)
-        
-        navLabel.textColor = clearToWhite
-        self.navView.alpha = offset
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        myCollectionView.delegate = self
-        myCollectionView.dataSource = self
-        
-        myCollectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: CollectionViewCell.identifier)
-        myCollectionView.register(SecondCollectionViewCell.self, forCellWithReuseIdentifier: SecondCollectionViewCell.identifier)
-        myCollectionView.register(Header.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Header.headerID)
     }
     
     private func firstSectionLayout() -> NSCollectionLayoutSection {
@@ -211,8 +229,7 @@ class RocketViewController: UIViewController {
     }
     
     @objc func tappedMe(){
-        let viewController = SettingsViewController()
-        present(viewController, animated: true)
+        present(SettingsViewController(), animated: true)
     }
     
     @objc func buttonAction() {
@@ -223,7 +240,6 @@ class RocketViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-//        navView.addBlur(style: .dark)
         setupConstraints()
     }
     
@@ -273,11 +289,11 @@ class RocketViewController: UIViewController {
             settingsImage.heightAnchor.constraint(equalToConstant: 32),
             
             navView.topAnchor.constraint(equalTo: view.topAnchor),
-            navView.heightAnchor.constraint(equalToConstant: 90),
+            navView.heightAnchor.constraint(equalToConstant: 86),
             navView.widthAnchor.constraint(equalToConstant: view.frame.width),
             
             navLabel.widthAnchor.constraint(equalToConstant: view.frame.width),
-            navLabel.topAnchor.constraint(equalTo: navView.topAnchor, constant: 60)
+            navLabel.bottomAnchor.constraint(equalTo: navView.bottomAnchor, constant: -10)
         ])
     }
     
@@ -297,7 +313,7 @@ extension RocketViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 {
-            return NetworkManager.shared.firstSectionArray.count
+            return NetworkManager.shared.firstSectionDict.keys.count
         } else {
             return NetworkManager.shared.secondSectionArray.count
         }
@@ -307,8 +323,11 @@ extension RocketViewController: UICollectionViewDelegate, UICollectionViewDataSo
         if indexPath.section == 0 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as? CollectionViewCell else { return
                 UICollectionViewCell() }
-            let value = NetworkManager.shared.firstSectionArray
-            cell.configureCell(amounts: value, indexPath: indexPath)
+//            let value = NetworkManager.shared.firstSectionArray
+//            cell.configureCell(amounts: value, indexPath: indexPath)
+            let key = Array(NetworkManager.shared.firstSectionDict.keys)[indexPath.item] 
+            let value = NetworkManager.shared.firstSectionDict[key]!
+            cell.configureCell(value: value, key: key.capitalized)
             return cell
         } else if indexPath.section == 1 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SecondCollectionViewCell.identifier, for: indexPath) as? SecondCollectionViewCell else { return UICollectionViewCell() }

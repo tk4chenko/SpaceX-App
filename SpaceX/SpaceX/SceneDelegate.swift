@@ -16,22 +16,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         let pageViewController = PageViewController()
-        let viewController = RocketViewController(index: 2)
+        let viewController = RocketViewController(index: 0)
 //        let viewController2 = LaunchesViewController()
 //        let viewController3 = SettingsViewController()
 //        window?.rootViewController = viewController
         window?.makeKeyAndVisible()
         window?.backgroundColor = .black
         let navigationController = UINavigationController(rootViewController: pageViewController)
-        let navigationController2 = UINavigationController(rootViewController: viewController)
-        navigationController2.navigationBar.tintColor = UIColor.black
-        navigationController2.navigationBar.barStyle = UIBarStyle.black
+//        let navigationController2 = UINavigationController(rootViewController: viewController)
+//        navigationController2.navigationBar.tintColor = UIColor.black
+//        navigationController2.navigationBar.barStyle = UIBarStyle.black
 //        _ = UINavigationController(rootViewController: viewController2)
 //        _ = UINavigationController(rootViewController: viewController3)
         window?.rootViewController = navigationController
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let _ = (scene as? UIWindowScene) else { return }
     }
 

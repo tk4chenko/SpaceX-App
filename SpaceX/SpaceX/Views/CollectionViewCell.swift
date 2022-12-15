@@ -13,15 +13,15 @@ class CollectionViewCell: UICollectionViewCell {
     
     let userDefaults = UserDefaults.standard
     
-    private lazy var height: String = {
-        if self.userDefaults.bool(forKey: "HeightKey") {
-            return "m"
-        } else {
-            return "ft"
-        }
-    }()
+//    private lazy var height: String = {
+//        if self.userDefaults.bool(forKey: "HeightKey") {
+//            return "m"
+//        } else {
+//            return "ft"
+//        }
+//    }()
     
-    private lazy var arrayOfValues = ["Height, \(self.height)", "Diameter, m", "Mass, kg", "Payload, kg"]
+    private lazy var arrayOfValues = ["Height, m", "Diameter, m", "Mass, kg", "Payload, kg"]
     
     private lazy var amountLabel: UILabel = {
         let label = UILabel()
@@ -52,9 +52,15 @@ class CollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    public func configureCell(amounts: [Double], indexPath: IndexPath) {
-        amountLabel.text = String(amounts[indexPath.row])
-        heightLabel.text = arrayOfValues[indexPath.row]
+    public func configureCell(value: [Double], key: String) {
+        if userDefaults.bool(forKey: "HeightKey") {
+            amountLabel.text = "\(value[0])"
+            heightLabel.text = key + ", m"
+        } else {
+            amountLabel.text = "\(value[1])"
+            heightLabel.text = key + ", ft"
+        }
+        
     }
     
     override func layoutSubviews() {
