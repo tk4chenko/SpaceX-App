@@ -55,13 +55,10 @@ class NetworkManager {
                 firstArrray.removeAll()
                 
                 // MARK: - First dict
-                
                 var dict = [String: [Double]]()
-                
                 dict.updateValue([data[index].height?.meters ?? 0, data[index].height?.feet ?? 0], forKey: FirstSection.height.rawValue)
-                
+
                 self.firstSectionDict = dict
-                
                 // MARK: - Second array
                 var secondArray = [String]()
                 secondArray.append(data[index].first_flight?.formattedDate(withFormat: "MMM dd, yyyy") ?? "HUY")
@@ -69,7 +66,6 @@ class NetworkManager {
                 secondArray.append("$" + String((Double(data[index].cost_per_launch ?? 0)) / 10000000) + " mln")
                 self.secondSectionArray = secondArray
                 secondArray.removeAll()
-                
                 // MARK: - Third array
                 var thirdArray = [String]()
                 thirdArray.append(String(data[index].first_stage?.engines ?? 0))
@@ -77,7 +73,6 @@ class NetworkManager {
                 thirdArray.append(String(data[index].first_stage?.burn_time_sec ?? 0) + " sec")
                 self.firstStageSection = thirdArray
                 thirdArray.removeAll()
-                
                 // MARK: - Fourth array
                 var fourthArray = [String]()
                 fourthArray.append(String(data[index].second_stage?.engines ?? 0))

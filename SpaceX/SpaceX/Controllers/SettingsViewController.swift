@@ -9,7 +9,7 @@ import UIKit
 
 class SettingsViewController: UIViewController {
     
-    var delegate: RefreshViewDelegate?
+    weak var delegate: RefreshViewDelegate?
     
     let userDefaults = UserDefaults.standard
     let heightKey = "HeightKey"
@@ -77,10 +77,12 @@ class SettingsViewController: UIViewController {
         if (sender.isOn == true){
             self.heightLabel.text = "M"
             userDefaults.set(true, forKey: heightKey)
+            userDefaults.synchronize()
         }
         else{
             self.heightLabel.text = "Ft"
             userDefaults.set(false, forKey: heightKey)
+            userDefaults.synchronize()
         }
     }
     

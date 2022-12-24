@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
         window?.backgroundColor = .black
         let navigationController = UINavigationController(rootViewController: pageViewController)
-//        let navigationController2 = UINavigationController(rootViewController: viewController)
+        let navigationController2 = UINavigationController(rootViewController: viewController)
 //        navigationController2.navigationBar.tintColor = UIColor.black
 //        navigationController2.navigationBar.barStyle = UIBarStyle.black
 //        _ = UINavigationController(rootViewController: viewController2)

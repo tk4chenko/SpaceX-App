@@ -13,15 +13,7 @@ class CollectionViewCell: UICollectionViewCell {
     
     let userDefaults = UserDefaults.standard
     
-//    private lazy var height: String = {
-//        if self.userDefaults.bool(forKey: "HeightKey") {
-//            return "m"
-//        } else {
-//            return "ft"
-//        }
-//    }()
-    
-    private lazy var arrayOfValues = ["Height, m", "Diameter, m", "Mass, kg", "Payload, kg"]
+//    private lazy var arrayOfValues = ["Height, m", "Diameter, m", "Mass, kg", "Payload, kg"]
     
     private lazy var amountLabel: UILabel = {
         let label = UILabel()
@@ -33,7 +25,7 @@ class CollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private lazy var heightLabel: UILabel = {
+    private lazy var unitLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
@@ -55,10 +47,10 @@ class CollectionViewCell: UICollectionViewCell {
     public func configureCell(value: [Double], key: String) {
         if userDefaults.bool(forKey: "HeightKey") {
             amountLabel.text = "\(value[0])"
-            heightLabel.text = key + ", m"
+            unitLabel.text = key + ", m"
         } else {
             amountLabel.text = "\(value[1])"
-            heightLabel.text = key + ", ft"
+            unitLabel.text = key + ", ft"
         }
         
     }
@@ -71,7 +63,7 @@ class CollectionViewCell: UICollectionViewCell {
     private func setupConstraint() {
         contentView.addSubview(mainView)
         mainView.addSubview(amountLabel)
-        mainView.addSubview(heightLabel)
+        mainView.addSubview(unitLabel)
         
         NSLayoutConstraint.activate([
             mainView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
@@ -83,9 +75,9 @@ class CollectionViewCell: UICollectionViewCell {
             amountLabel.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -8),
             amountLabel.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: 8),
             
-            heightLabel.topAnchor.constraint(equalTo: amountLabel.bottomAnchor, constant: 8),
-            heightLabel.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -8),
-            heightLabel.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: 8)
+            unitLabel.topAnchor.constraint(equalTo: amountLabel.bottomAnchor, constant: 8),
+            unitLabel.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -8),
+            unitLabel.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: 8)
         ])
     }
 }

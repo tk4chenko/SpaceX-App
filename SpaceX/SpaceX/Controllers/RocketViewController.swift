@@ -8,14 +8,16 @@
 import UIKit
 import SDWebImage
 
-protocol RefreshViewDelegate {
+protocol RefreshViewDelegate: AnyObject {
     func refreshView()
 }
 
-class RocketViewController: UIViewController, RefreshViewDelegate{
+class RocketViewController: UIViewController, RefreshViewDelegate {
     
     var index = Int()
     var id = String()
+    
+    private let vc = SettingsViewController()
     
     lazy var contentViewSize = CGSize(width: view.frame.width, height: view.frame.height * 1.59)
     
@@ -120,7 +122,12 @@ class RocketViewController: UIViewController, RefreshViewDelegate{
     }()
     
     func refreshView() {
-        myCollectionView.reloadData()
+        print("REFRESH")
+//        fetchData()
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//            self.myCollectionView.reloadData()
+//            print("RELOAD")
+//        }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -145,12 +152,15 @@ class RocketViewController: UIViewController, RefreshViewDelegate{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchData()
+//        myCollectionView.reloadData()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-//        fetchData()
+        
+        fetchData()
+        
+        vc.delegate = self
         
         myCollectionView.delegate = self
         myCollectionView.dataSource = self
@@ -229,6 +239,8 @@ class RocketViewController: UIViewController, RefreshViewDelegate{
     }
     
     @objc func tappedMe(){
+//        let vc = SettingsViewController()
+//        self.navigationController?.pushViewController(vc, animated: true)
         present(SettingsViewController(), animated: true)
     }
     
@@ -320,6 +332,7 @@ extension RocketViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SecondCollectionViewCell.identifier, for: indexPath) as? SecondCollectionViewCell else { return UICollectionViewCell() }
         if indexPath.section == 0 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as? CollectionViewCell else { return
                 UICollectionViewCell() }
@@ -330,17 +343,14 @@ extension RocketViewController: UICollectionViewDelegate, UICollectionViewDataSo
             cell.configureCell(value: value, key: key.capitalized)
             return cell
         } else if indexPath.section == 1 {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SecondCollectionViewCell.identifier, for: indexPath) as? SecondCollectionViewCell else { return UICollectionViewCell() }
             let value = NetworkManager.shared.secondSectionArray
             cell.configure(section: .second, value: value, indexPath: indexPath)
             return cell
         } else if indexPath.section == 2 {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SecondCollectionViewCell.identifier, for: indexPath) as? SecondCollectionViewCell else { return UICollectionViewCell() }
             let value = NetworkManager.shared.firstStageSection
             cell.configure(section: .stage, value: value, indexPath: indexPath)
             return cell
         } else {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SecondCollectionViewCell.identifier, for: indexPath) as? SecondCollectionViewCell else { return UICollectionViewCell() }
             let value = NetworkManager.shared.secondStageSection
             cell.configure(section: .stage, value: value, indexPath: indexPath)
             return cell
