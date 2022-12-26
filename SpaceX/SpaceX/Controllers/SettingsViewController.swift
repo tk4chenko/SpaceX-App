@@ -14,6 +14,14 @@ class SettingsViewController: UIViewController {
     let userDefaults = UserDefaults.standard
     let heightKey = "HeightKey"
     
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = 12
+        return stackView
+    }()
+    
     lazy var heightSwitch: UISwitch = {
         let mySwitch = UISwitch()
         mySwitch.addTarget(self, action: #selector(self.heightSwitchChange(_:)), for: .valueChanged)
@@ -73,6 +81,10 @@ class SettingsViewController: UIViewController {
         return view
     }()
     
+    private func configureSwitch() {
+        
+    }
+    
     @objc func heightSwitchChange(_ sender:UISwitch!) {
         if (sender.isOn == true){
             self.heightLabel.text = "M"
@@ -84,6 +96,11 @@ class SettingsViewController: UIViewController {
             userDefaults.set(false, forKey: heightKey)
             userDefaults.synchronize()
         }
+        reloadData()
+    }
+    
+    private func reloadData() {
+        NotificationCenter.default.post(name: NotificationObserver.reloadData, object: nil)
     }
     
     @objc func buttonAction() {
@@ -104,11 +121,11 @@ class SettingsViewController: UIViewController {
         view.backgroundColor = .clear
     }
     
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        guard let firstVC = presentedViewController as? RocketViewController else { return }
-//        firstVC.myCollectionView.reloadData()
-//    }
+    //    override func viewWillDisappear(_ animated: Bool) {
+    //        super.viewWillDisappear(animated)
+    //        guard let firstVC = presentedViewController as? RocketViewController else { return }
+    //        firstVC.myCollectionView.reloadData()
+    //    }
     
     private func checkSwitchState() {
         if userDefaults.bool(forKey: heightKey) {

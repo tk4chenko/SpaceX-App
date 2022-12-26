@@ -26,9 +26,6 @@ class PageViewController: UIPageViewController {
         
         for i in 0...3 {
             let vc = RocketViewController(index: i)
-//            let nav = UINavigationController(rootViewController: vc)
-//            nav.navigationBar.tintColor = UIColor.white
-//            nav.navigationBar.barStyle = UIBarStyle.black
             arrayOfControllers.append(vc)
         }
         

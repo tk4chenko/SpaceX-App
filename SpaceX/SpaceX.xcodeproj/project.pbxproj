@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		045B2001295A34A3004C5639 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045B2000295A34A3004C5639 /* SettingsView.swift */; };
 		0488382C294267FC00A2D2A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0488382B294267FC00A2D2A5 /* AppDelegate.swift */; };
 		0488382E294267FC00A2D2A5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0488382D294267FC00A2D2A5 /* SceneDelegate.swift */; };
 		04883830294267FC00A2D2A5 /* RocketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0488382F294267FC00A2D2A5 /* RocketViewController.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		045B2000295A34A3004C5639 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		04883828294267FC00A2D2A5 /* SpaceX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0488382B294267FC00A2D2A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0488382D294267FC00A2D2A5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				04C0BE9429434E0E00100934 /* CollectionViewCell.swift */,
 				04A05F6B2944BF7200A27465 /* SecondCollectionViewCell.swift */,
 				04A05F712944EA7100A27465 /* LaunchCollectionViewCell.swift */,
+				045B2000295A34A3004C5639 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 				04A05F7629450D9300A27465 /* NetworkManager.swift in Sources */,
 				04A05F702944E9AF00A27465 /* LaunchesViewController.swift in Sources */,
 				04A05F722944EA7100A27465 /* LaunchCollectionViewCell.swift in Sources */,
+				045B2001295A34A3004C5639 /* SettingsView.swift in Sources */,
 				04A05F6C2944BF7200A27465 /* SecondCollectionViewCell.swift in Sources */,
 				04C0BE9529434E0E00100934 /* CollectionViewCell.swift in Sources */,
 				04A05F6E2944CB8600A27465 /* Header.swift in Sources */,

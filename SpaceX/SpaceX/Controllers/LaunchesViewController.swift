@@ -52,6 +52,7 @@ class LaunchesViewController: UIViewController {
         
         title = "Launches"
         
+        navigationController?.navigationBar.barStyle = UIBarStyle.black
         navigationController?.navigationBar.tintColor = UIColor.white
     
         view.addSubview(launchesCollectionView)

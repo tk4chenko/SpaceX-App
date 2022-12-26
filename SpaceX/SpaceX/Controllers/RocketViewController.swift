@@ -123,27 +123,27 @@ class RocketViewController: UIViewController, RefreshViewDelegate {
     
     func refreshView() {
         print("REFRESH")
-//        fetchData()
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//            self.myCollectionView.reloadData()
-//            print("RELOAD")
-//        }
+        //        fetchData()
+        //        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        //            self.myCollectionView.reloadData()
+        //            print("RELOAD")
+        //        }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        let targetHeight = view.frame.height / 2 + label.frame.height
+        //        let targetHeight = view.frame.height / 2 + label.frame.height
         
         let offset = ((scrollView.contentOffset.y - view.frame.height / 2) + 100) / (label.frame.height + 48)
         let offset2 = (scrollView.contentOffset.y - view.frame.height / 2) / (label.frame.height + 48)
-//        print(offset2)
+        //        print(offset2)
         
-//        let clearToBlack = UIColor(red: 0, green: 0, blue: 0, alpha: offset)
+        //        let clearToBlack = UIColor(red: 0, green: 0, blue: 0, alpha: offset)
         let clearToWhite = UIColor(red: 1, green: 1, blue: 1, alpha: offset2)
         
-//        if offset > 1 {
-//            offset = 1
-//        }
-//        print(offset)
+        //        if offset > 1 {
+        //            offset = 1
+        //        }
+        //        print(offset)
         
         navLabel.textColor = clearToWhite
         navView.alpha = offset
@@ -152,13 +152,14 @@ class RocketViewController: UIViewController, RefreshViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchData()
-//        myCollectionView.reloadData()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         fetchData()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: NotificationObserver.reloadData, object: nil)
         
         vc.delegate = self
         
@@ -168,6 +169,12 @@ class RocketViewController: UIViewController, RefreshViewDelegate {
         myCollectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: CollectionViewCell.identifier)
         myCollectionView.register(SecondCollectionViewCell.self, forCellWithReuseIdentifier: SecondCollectionViewCell.identifier)
         myCollectionView.register(Header.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Header.headerID)
+    }
+    
+    @objc private func reloadData() {
+        DispatchQueue.main.async {
+            self.myCollectionView.reloadData()
+        }
     }
     
     func fetchData() {
@@ -239,8 +246,8 @@ class RocketViewController: UIViewController, RefreshViewDelegate {
     }
     
     @objc func tappedMe(){
-//        let vc = SettingsViewController()
-//        self.navigationController?.pushViewController(vc, animated: true)
+        //        let vc = SettingsViewController()
+        //        self.navigationController?.pushViewController(vc, animated: true)
         present(SettingsViewController(), animated: true)
     }
     
@@ -336,9 +343,9 @@ extension RocketViewController: UICollectionViewDelegate, UICollectionViewDataSo
         if indexPath.section == 0 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as? CollectionViewCell else { return
                 UICollectionViewCell() }
-//            let value = NetworkManager.shared.firstSectionArray
-//            cell.configureCell(amounts: value, indexPath: indexPath)
-            let key = Array(NetworkManager.shared.firstSectionDict.keys)[indexPath.item] 
+            //            let value = NetworkManager.shared.firstSectionArray
+            //            cell.configureCell(amounts: value, indexPath: indexPath)
+            let key = Array(NetworkManager.shared.firstSectionDict.keys)[indexPath.item]
             let value = NetworkManager.shared.firstSectionDict[key]!
             cell.configureCell(value: value, key: key.capitalized)
             return cell
@@ -370,4 +377,9 @@ extension UIView {
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.addSubview(blurEffectView)
     }
+}
+
+
+struct NotificationObserver {
+    static let reloadData = Notification.Name("reloadData")
 }
