@@ -13,8 +13,6 @@ class CollectionViewCell: UICollectionViewCell {
     
     let userDefaults = UserDefaults.standard
     
-//    private lazy var arrayOfValues = ["Height, m", "Diameter, m", "Mass, kg", "Payload, kg"]
-    
     private lazy var amountLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -51,6 +49,17 @@ class CollectionViewCell: UICollectionViewCell {
         } else {
             amountLabel.text = "\(value[1])"
             unitLabel.text = key + ", ft"
+        }
+        
+    }
+    
+    public func configureByRocket(rocket: Rocket) {
+        if userDefaults.bool(forKey: "HeightKey") {
+            amountLabel.text = "\(rocket.height?.meters ?? 0)"
+            unitLabel.text = "Height, m"
+        } else {
+            amountLabel.text = "\(rocket.height?.feet ?? 0)"
+            unitLabel.text = "Height, ft"
         }
         
     }

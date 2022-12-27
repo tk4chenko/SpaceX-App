@@ -15,7 +15,6 @@ protocol RefreshViewDelegate: AnyObject {
 class RocketViewController: UIViewController, RefreshViewDelegate {
     
     var index = Int()
-    var id = String()
     
     private let vc = SettingsViewController()
     
@@ -29,6 +28,8 @@ class RocketViewController: UIViewController, RefreshViewDelegate {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    var rocket: Rocket!
     
     public lazy var myCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
@@ -151,7 +152,7 @@ class RocketViewController: UIViewController, RefreshViewDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        fetchData()
+        //        fetchData()
     }
     
     override func viewDidLoad() {
@@ -179,8 +180,8 @@ class RocketViewController: UIViewController, RefreshViewDelegate {
     
     func fetchData() {
         NetworkManager.shared.loadRockets(index: self.index) { rocket in
+            self.rocket = rocket
             self.navLabel.text = rocket.name
-            self.id = rocket.id ?? "no id"
             self.label.text = rocket.name
             guard let url = URL(string: rocket.flickr_images?.first ?? "") else { return }
             self.backgroundImage.sd_imageIndicator = SDWebImageActivityIndicator.gray
@@ -253,7 +254,7 @@ class RocketViewController: UIViewController, RefreshViewDelegate {
     
     @objc func buttonAction() {
         let vc = LaunchesViewController()
-        vc.configure(id: self.id)
+        vc.configure(id: rocket.id ?? "")
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -332,36 +333,29 @@ extension RocketViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 {
-            return NetworkManager.shared.firstSectionDict.keys.count
+            return 1
         } else {
-            return NetworkManager.shared.secondSectionArray.count
+            return 3
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SecondCollectionViewCell.identifier, for: indexPath) as? SecondCollectionViewCell else { return UICollectionViewCell() }
-        if indexPath.section == 0 {
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as? CollectionViewCell else { return
-                UICollectionViewCell() }
-            //            let value = NetworkManager.shared.firstSectionArray
-            //            cell.configureCell(amounts: value, indexPath: indexPath)
-            let key = Array(NetworkManager.shared.firstSectionDict.keys)[indexPath.item]
-            let value = NetworkManager.shared.firstSectionDict[key]!
-            cell.configureCell(value: value, key: key.capitalized)
-            return cell
-        } else if indexPath.section == 1 {
-            let value = NetworkManager.shared.secondSectionArray
-            cell.configure(section: .second, value: value, indexPath: indexPath)
-            return cell
-        } else if indexPath.section == 2 {
-            let value = NetworkManager.shared.firstStageSection
-            cell.configure(section: .stage, value: value, indexPath: indexPath)
-            return cell
-        } else {
-            let value = NetworkManager.shared.secondStageSection
-            cell.configure(section: .stage, value: value, indexPath: indexPath)
-            return cell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as? CollectionViewCell else { return
+            UICollectionViewCell() }
+        guard let cell2 = collectionView.dequeueReusableCell(withReuseIdentifier: SecondCollectionViewCell.identifier, for: indexPath) as? SecondCollectionViewCell else { return UICollectionViewCell() }
+        if let rocket = self.rocket {
+            switch indexPath.section {
+            case 0:
+                cell.configureByRocket(rocket: rocket)
+                return cell
+            case 1, 2, 3:
+                cell2.configureByRocket(rocket: rocket, indexPath: indexPath)
+                return cell2
+            default:
+                return cell
+            }
         }
+        return cell
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {

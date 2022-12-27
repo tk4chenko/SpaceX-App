@@ -121,12 +121,6 @@ class SettingsViewController: UIViewController {
         view.backgroundColor = .clear
     }
     
-    //    override func viewWillDisappear(_ animated: Bool) {
-    //        super.viewWillDisappear(animated)
-    //        guard let firstVC = presentedViewController as? RocketViewController else { return }
-    //        firstVC.myCollectionView.reloadData()
-    //    }
-    
     private func checkSwitchState() {
         if userDefaults.bool(forKey: heightKey) {
             self.heightSwitch.setOn(true, animated: false)

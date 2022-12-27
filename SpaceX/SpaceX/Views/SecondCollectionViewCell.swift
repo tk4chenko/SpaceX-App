@@ -59,7 +59,49 @@ class SecondCollectionViewCell: UICollectionViewCell {
         case .stage:
             leftLabel.text = stageSectionArray[indexPath.row]
         }
-        
+    }
+    
+    public func configureByRocket(rocket: Rocket, indexPath: IndexPath) {
+        switch indexPath.section {
+        case 1:
+            switch indexPath.row {
+            case 0:
+                rightLabel.text = rocket.first_flight?.formattedDate(withFormat: "MMM dd, yyyy")
+            case 1:
+                rightLabel.text = rocket.country
+            case 2:
+                rightLabel.text = "$\(Double(rocket.cost_per_launch ?? 0) / 10000000) mln"
+            default:
+                return
+            }
+            leftLabel.text = secondSectionArray[indexPath.row]
+        case 2:
+            switch indexPath.row {
+            case 0:
+                rightLabel.text = "\(rocket.first_stage?.engines ?? 0)"
+            case 1:
+                rightLabel.text = "\(rocket.first_stage?.fuel_amount_tons ?? 0) ton"
+            case 2:
+                rightLabel.text = "\(rocket.first_stage?.burn_time_sec ?? 0) sec"
+            default:
+                return
+            }
+            leftLabel.text = stageSectionArray[indexPath.row]
+        case 3:
+            switch indexPath.row {
+            case 0:
+                rightLabel.text = "\(rocket.second_stage?.engines ?? 0)"
+            case 1:
+                rightLabel.text = "\(rocket.second_stage?.fuel_amount_tons ?? 0) ton"
+            case 2:
+                rightLabel.text = "\(rocket.second_stage?.burn_time_sec ?? 0) sec"
+            default:
+                return
+            }
+            leftLabel.text = stageSectionArray[indexPath.row]
+        default:
+            return
+        }
     }
     
     private func setupConstraint() {
