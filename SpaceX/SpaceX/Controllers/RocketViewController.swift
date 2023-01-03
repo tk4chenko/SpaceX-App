@@ -333,7 +333,7 @@ extension RocketViewController: UICollectionViewDelegate, UICollectionViewDataSo
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 {
-            return 1
+            return 4
         } else {
             return 3
         }
@@ -346,7 +346,7 @@ extension RocketViewController: UICollectionViewDelegate, UICollectionViewDataSo
         if let rocket = self.rocket {
             switch indexPath.section {
             case 0:
-                cell.configureByRocket(rocket: rocket)
+                    cell.configureCell(rocket: rocket, indexPath: indexPath, setting:  Settings.allCases[indexPath.row])
                 return cell
             case 1, 2, 3:
                 cell2.configureByRocket(rocket: rocket, indexPath: indexPath)

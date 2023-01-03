@@ -18,39 +18,9 @@ class SettingsViewController: UIViewController {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.spacing = 12
+        stackView.spacing = 24
+        stackView.distribution = .fillEqually
         return stackView
-    }()
-    
-    lazy var heightSwitch: UISwitch = {
-        let mySwitch = UISwitch()
-        mySwitch.addTarget(self, action: #selector(self.heightSwitchChange(_:)), for: .valueChanged)
-        mySwitch.setOn(true, animated: false)
-        mySwitch.translatesAutoresizingMaskIntoConstraints = false
-        mySwitch.onTintColor = .darkGray
-        return mySwitch
-    }()
-    
-    lazy var heightLabel: UILabel = {
-        let label = UILabel()
-        label.text = "M"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 1
-        label.textAlignment = .center
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        return label
-    }()
-    
-    lazy var leftHeightLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Height"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 1
-        label.textAlignment = .left
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        return label
     }()
     
     lazy var topLabel: UILabel = {
@@ -77,34 +47,15 @@ class SettingsViewController: UIViewController {
     private lazy var myView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.addBlur(style: .systemChromeMaterialDark)
         return view
     }()
-    
-    private func configureSwitch() {
-        
-    }
-    
-    @objc func heightSwitchChange(_ sender:UISwitch!) {
-        if (sender.isOn == true){
-            self.heightLabel.text = "M"
-            userDefaults.set(true, forKey: heightKey)
-            userDefaults.synchronize()
-        }
-        else{
-            self.heightLabel.text = "Ft"
-            userDefaults.set(false, forKey: heightKey)
-            userDefaults.synchronize()
-        }
-        reloadData()
-    }
     
     private func reloadData() {
         NotificationCenter.default.post(name: NotificationObserver.reloadData, object: nil)
     }
     
     @objc func buttonAction() {
-        delegate?.refreshView()
+        reloadData()
         self.dismiss(animated: true)
     }
     
@@ -115,30 +66,20 @@ class SettingsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        checkSwitchState()
-        view.addSubview(myView)
-        myView.frame = view.bounds
-        view.backgroundColor = .clear
-    }
-    
-    private func checkSwitchState() {
-        if userDefaults.bool(forKey: heightKey) {
-            self.heightSwitch.setOn(true, animated: false)
-            self.heightLabel.text = "M"
-            userDefaults.synchronize()
-        } else {
-            self.heightLabel.text = "Ft"
-            self.heightSwitch.setOn(false, animated: false)
-            userDefaults.synchronize()
+        view.layer.backgroundColor = UIColor(red: 0.071, green: 0.071, blue: 0.071, alpha: 1).cgColor
+
+        Settings.allCases.forEach { setting in
+            let settingView = SettingsView()
+            settingView.configure(param: setting)
+            stackView.addArrangedSubview(settingView)
         }
     }
     
     private func setupConstraints() {
-        view.addSubview(leftHeightLabel)
-        view.addSubview(heightLabel)
-        view.addSubview(heightSwitch)
         view.addSubview(topLabel)
         view.addSubview(button)
+        view.addSubview(stackView)
+        
         NSLayoutConstraint.activate([
             topLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
             topLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
@@ -150,18 +91,9 @@ class SettingsViewController: UIViewController {
             button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
             button.heightAnchor.constraint(equalToConstant: 40),
             
-            heightSwitch.topAnchor.constraint(equalTo: button.bottomAnchor, constant: 70),
-            heightSwitch.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -28),
-            
-            leftHeightLabel.centerYAnchor.constraint(equalTo: heightSwitch.centerYAnchor),
-            leftHeightLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 28),
-            leftHeightLabel.widthAnchor.constraint(equalToConstant: 200),
-            leftHeightLabel.heightAnchor.constraint(equalToConstant: 40),
-            
-            heightLabel.centerYAnchor.constraint(equalTo: heightSwitch.centerYAnchor),
-            heightLabel.widthAnchor.constraint(equalToConstant: 40),
-            heightLabel.trailingAnchor.constraint(equalTo: heightSwitch.leadingAnchor, constant: 0),
-            heightLabel.heightAnchor.constraint(equalToConstant: 40),
+            stackView.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: 72),
+            stackView.widthAnchor.constraint(equalToConstant: view.frame.width),
+            stackView.heightAnchor.constraint(equalToConstant: 256),
         ])
     }
     

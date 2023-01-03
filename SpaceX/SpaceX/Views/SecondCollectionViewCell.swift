@@ -51,15 +51,15 @@ class SecondCollectionViewCell: UICollectionViewCell {
         setupConstraint()
     }
     
-    public func configure(section: Section, value: [String], indexPath: IndexPath) {
-        rightLabel.text = value[indexPath.row]
-        switch section {
-        case .second:
-            leftLabel.text = secondSectionArray[indexPath.row]
-        case .stage:
-            leftLabel.text = stageSectionArray[indexPath.row]
-        }
-    }
+//    public func configure(section: Section, value: [String], indexPath: IndexPath) {
+//        rightLabel.text = value[indexPath.row]
+//        switch section {
+//        case .second:
+//            leftLabel.text = secondSectionArray[indexPath.row]
+//        case .stage:
+//            leftLabel.text = stageSectionArray[indexPath.row]
+//        }
+//    }
     
     public func configureByRocket(rocket: Rocket, indexPath: IndexPath) {
         switch indexPath.section {

@@ -8,20 +8,19 @@
 import Foundation
 import Alamofire
 
-enum FirstSection: String {
-    case height, diameter, mass, payload
-}
-
 class NetworkManager {
     
     static let shared = NetworkManager()
     var arrayOfLaunches = [Launch]()
+    
+    var firstSection = [String: [Double]]()
     
     func loadRockets(index: Int, completion: @escaping (Rocket) -> Void) {
         let genresRequest = AF.request("https://api.spacexdata.com/v4/rockets", method: .get)
         genresRequest.responseDecodable(of: [Rocket].self) { response in
             do {
                 let data = try response.result.get()
+                
                 completion(data[index])
             }
             catch {

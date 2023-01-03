@@ -42,26 +42,38 @@ class CollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    public func configureCell(value: [Double], key: String) {
-        if userDefaults.bool(forKey: "HeightKey") {
-            amountLabel.text = "\(value[0])"
-            unitLabel.text = key + ", m"
-        } else {
-            amountLabel.text = "\(value[1])"
-            unitLabel.text = key + ", ft"
+    public func configureCell(rocket: Rocket,indexPath: IndexPath, setting: Settings) {
+        let int = userDefaults.integer(forKey: setting.rawValue)
+        switch indexPath.item {
+        case 0:
+            if int == 0 {
+                amountLabel.text = "\(rocket.height?.meters ?? 0)"
+            } else {
+                amountLabel.text = "\(rocket.height?.feet ?? 0)"
+            }
+        case 1:
+            if int == 0 {
+                amountLabel.text = String(rocket.diameter?.meters ?? 0)
+            } else {
+                amountLabel.text = String(rocket.diameter?.feet ?? 0)
+            }
+        case 2:
+            if int == 0 {
+                amountLabel.text = String(rocket.mass?.kg ?? 0)
+            } else {
+                amountLabel.text = String(rocket.mass?.lb ?? 0)
+            }
+        case 3:
+            guard let payload = rocket.payload_weights else { return }
+            if int == 0 {
+                amountLabel.text = "\(payload[0].kg ?? 0)"
+            } else {
+                amountLabel.text = "\(payload[0].lb ?? 0)"
+            }
+        default:
+            break
         }
-        
-    }
-    
-    public func configureByRocket(rocket: Rocket) {
-        if userDefaults.bool(forKey: "HeightKey") {
-            amountLabel.text = "\(rocket.height?.meters ?? 0)"
-            unitLabel.text = "Height, m"
-        } else {
-            amountLabel.text = "\(rocket.height?.feet ?? 0)"
-            unitLabel.text = "Height, ft"
-        }
-        
+        unitLabel.text = "\(setting.rawValue), \(setting.description[int])"
     }
     
     override func layoutSubviews() {
