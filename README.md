@@ -20,7 +20,7 @@ The application created for show information about SpaceX space rockets and a li
 The application contains 3 screens:
 | Rocket | Launches | Settings |
 |:------:|:--------:|:--------:|
-|<img src="https://user-images.githubusercontent.com/106691125/206934954-c372f7ea-8d92-4b2d-a03a-fc81b469da73.png" alt="RocketViewController" width="235" height="439"/>|<img src="https://user-images.githubusercontent.com/106691125/206935967-4a981b54-e52c-4218-ba0e-c4535f9b453a.png" alt="Launches" width="235" height="439"/>|<img src="https://user-images.githubusercontent.com/106691125/210422455-ebc667b6-2768-45d7-a301-1390b7782cee.png" alt="Settings" width="235" height="439"/>|
+|<img src="https://user-images.githubusercontent.com/106691125/206934954-c372f7ea-8d92-4b2d-a03a-fc81b469da73.png">|<img src="https://user-images.githubusercontent.com/106691125/206935967-4a981b54-e52c-4218-ba0e-c4535f9b453a.png">|<img src="https://user-images.githubusercontent.com/106691125/210422455-ebc667b6-2768-45d7-a301-1390b7782cee.png">|
 
 ## Features
 * UI Programmatically
