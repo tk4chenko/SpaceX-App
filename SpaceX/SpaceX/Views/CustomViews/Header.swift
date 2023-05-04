@@ -16,7 +16,6 @@ class Header: UICollectionReusableView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
         label.textAlignment = .left
-//        label.text = "Header"
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         return label
@@ -25,18 +24,8 @@ class Header: UICollectionReusableView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.frame = self.bounds
-//        view.backgroundColor = .red
         return view
     }()
-    
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//        
-////        label.text = "Header"
-////        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-////        addSubview(label)
-//        
-//    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -46,7 +35,6 @@ class Header: UICollectionReusableView {
     private func setupConstraint() {
         self.addSubview(mainView)
         mainView.addSubview(label)
-        
         NSLayoutConstraint.activate([
             mainView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0),
             mainView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
@@ -57,7 +45,6 @@ class Header: UICollectionReusableView {
             label.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: 0),
             label.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: 0),
             label.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: 32),
-        
         ])
     }
 }

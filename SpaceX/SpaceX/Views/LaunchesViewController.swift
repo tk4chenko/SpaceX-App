@@ -9,7 +9,8 @@ import UIKit
 
 class LaunchesViewController: UIViewController {
     
-    var id = String()
+    var id: String?
+    var launches: [Launch]?
 
     private lazy var launchesCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
@@ -20,17 +21,14 @@ class LaunchesViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NetworkManager.shared.loadLaunches(id: self.id) { launches in
+        self.launches?.removeAll()
+        NetworkService.shared.loadLaunches(id: self.id ?? "") { launches in
             if launches.count == 0 {
                 self.label.alpha = 1
             }
+            self.launches = launches
             self.launchesCollectionView.reloadData()
         }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        NetworkManager.shared.arrayOfLaunches.removeAll()
     }
     
     private lazy var label: UILabel = {
@@ -104,14 +102,14 @@ class LaunchesViewController: UIViewController {
 extension LaunchesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let launches = NetworkManager.shared.arrayOfLaunches
-        return launches.count
+        return launches?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LaunchCollectionViewCell.identifier, for: indexPath) as? LaunchCollectionViewCell else { return UICollectionViewCell() }
-        let launches = NetworkManager.shared.arrayOfLaunches
-        cell.configure(launch: launches[indexPath.row])
+        if let launches = self.launches {
+            cell.configure(launch: launches[indexPath.row])
+        }
         return cell
     }
     

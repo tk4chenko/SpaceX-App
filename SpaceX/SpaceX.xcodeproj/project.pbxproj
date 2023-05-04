@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		045856512A043C7F00ECD020 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045856502A043C7F00ECD020 /* Observable.swift */; };
+		045856542A043CD900ECD020 /* RocketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045856532A043CD900ECD020 /* RocketViewModel.swift */; };
+		045856562A043CF500ECD020 /* LaunchesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045856552A043CF500ECD020 /* LaunchesViewModel.swift */; };
 		045B2001295A34A3004C5639 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045B2000295A34A3004C5639 /* SettingsView.swift */; };
 		0488382C294267FC00A2D2A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0488382B294267FC00A2D2A5 /* AppDelegate.swift */; };
 		0488382E294267FC00A2D2A5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0488382D294267FC00A2D2A5 /* SceneDelegate.swift */; };
@@ -18,15 +21,21 @@
 		04A05F702944E9AF00A27465 /* LaunchesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A05F6F2944E9AF00A27465 /* LaunchesViewController.swift */; };
 		04A05F722944EA7100A27465 /* LaunchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A05F712944EA7100A27465 /* LaunchCollectionViewCell.swift */; };
 		04A05F742944FBD900A27465 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A05F732944FBD900A27465 /* SettingsViewController.swift */; };
-		04A05F7629450D9300A27465 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A05F7529450D9300A27465 /* NetworkManager.swift */; };
+		04A05F7629450D9300A27465 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A05F7529450D9300A27465 /* NetworkService.swift */; };
 		04A05F7829450E0800A27465 /* RocketModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A05F7729450E0800A27465 /* RocketModel.swift */; };
 		04A05F7A29450E2600A27465 /* LaunchesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A05F7929450E2600A27465 /* LaunchesModel.swift */; };
+		04A7956F29C7DD2100487027 /* UICollectionView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A7956E29C7DD2100487027 /* UICollectionView + Extension.swift */; };
+		04A7957129C7DD7C00487027 /* UIView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A7957029C7DD7C00487027 /* UIView + Extension.swift */; };
+		04A7957529C7DE5300487027 /* String + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A7957429C7DE5300487027 /* String + Extension.swift */; };
 		04B41A2F2945F1DB0052A08E /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B41A2E2945F1DB0052A08E /* PageViewController.swift */; };
 		04C0BE9529434E0E00100934 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0BE9429434E0E00100934 /* CollectionViewCell.swift */; };
 		2F19D5C4B6C7F12E17B5DAE4 /* Pods_SpaceX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14E6B9272F8AF02A79A1749F /* Pods_SpaceX.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		045856502A043C7F00ECD020 /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
+		045856532A043CD900ECD020 /* RocketViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RocketViewModel.swift; sourceTree = "<group>"; };
+		045856552A043CF500ECD020 /* LaunchesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchesViewModel.swift; sourceTree = "<group>"; };
 		045B2000295A34A3004C5639 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		04883828294267FC00A2D2A5 /* SpaceX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0488382B294267FC00A2D2A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -40,9 +49,12 @@
 		04A05F6F2944E9AF00A27465 /* LaunchesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchesViewController.swift; sourceTree = "<group>"; };
 		04A05F712944EA7100A27465 /* LaunchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCollectionViewCell.swift; sourceTree = "<group>"; };
 		04A05F732944FBD900A27465 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		04A05F7529450D9300A27465 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		04A05F7529450D9300A27465 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		04A05F7729450E0800A27465 /* RocketModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RocketModel.swift; sourceTree = "<group>"; };
 		04A05F7929450E2600A27465 /* LaunchesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchesModel.swift; sourceTree = "<group>"; };
+		04A7956E29C7DD2100487027 /* UICollectionView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView + Extension.swift"; sourceTree = "<group>"; };
+		04A7957029C7DD7C00487027 /* UIView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + Extension.swift"; sourceTree = "<group>"; };
+		04A7957429C7DE5300487027 /* String + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + Extension.swift"; sourceTree = "<group>"; };
 		04B41A2E2945F1DB0052A08E /* PageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
 		04C0BE9429434E0E00100934 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		14E6B9272F8AF02A79A1749F /* Pods_SpaceX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpaceX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,9 +74,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0458564F2A043C5100ECD020 /* Bindings */ = {
+			isa = PBXGroup;
+			children = (
+				045856502A043C7F00ECD020 /* Observable.swift */,
+			);
+			path = Bindings;
+			sourceTree = "<group>";
+		};
+		045856522A043CC900ECD020 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				045856532A043CD900ECD020 /* RocketViewModel.swift */,
+				045856552A043CF500ECD020 /* LaunchesViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		0488381F294267FC00A2D2A5 = {
 			isa = PBXGroup;
 			children = (
+				0458564F2A043C5100ECD020 /* Bindings */,
 				0488382A294267FC00A2D2A5 /* SpaceX */,
 				04883829294267FC00A2D2A5 /* Products */,
 				5B0B2159250A93B2B8AA3BC5 /* Pods */,
@@ -83,10 +113,11 @@
 		0488382A294267FC00A2D2A5 /* SpaceX */ = {
 			isa = PBXGroup;
 			children = (
-				04A05F7529450D9300A27465 /* NetworkManager.swift */,
-				04B41A322945F1F70052A08E /* Views */,
+				04A05F7529450D9300A27465 /* NetworkService.swift */,
+				045856522A043CC900ECD020 /* ViewModels */,
+				04B41A312945F1E80052A08E /* Views */,
 				04B41A302945F1E10052A08E /* Models */,
-				04B41A312945F1E80052A08E /* Controllers */,
+				04A7957329C7DD9600487027 /* Extension */,
 				0488382B294267FC00A2D2A5 /* AppDelegate.swift */,
 				0488382D294267FC00A2D2A5 /* SceneDelegate.swift */,
 				04883834294267FE00A2D2A5 /* Assets.xcassets */,
@@ -94,6 +125,16 @@
 				04883839294267FE00A2D2A5 /* Info.plist */,
 			);
 			path = SpaceX;
+			sourceTree = "<group>";
+		};
+		04A7957329C7DD9600487027 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				04A7956E29C7DD2100487027 /* UICollectionView + Extension.swift */,
+				04A7957029C7DD7C00487027 /* UIView + Extension.swift */,
+				04A7957429C7DE5300487027 /* String + Extension.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		04B41A302945F1E10052A08E /* Models */ = {
@@ -105,18 +146,19 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		04B41A312945F1E80052A08E /* Controllers */ = {
+		04B41A312945F1E80052A08E /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				04B41A2E2945F1DB0052A08E /* PageViewController.swift */,
 				0488382F294267FC00A2D2A5 /* RocketViewController.swift */,
 				04A05F6F2944E9AF00A27465 /* LaunchesViewController.swift */,
 				04A05F732944FBD900A27465 /* SettingsViewController.swift */,
+				04B41A322945F1F70052A08E /* CustomViews */,
 			);
-			path = Controllers;
+			path = Views;
 			sourceTree = "<group>";
 		};
-		04B41A322945F1F70052A08E /* Views */ = {
+		04B41A322945F1F70052A08E /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
 				04A05F6D2944CB8600A27465 /* Header.swift */,
@@ -125,7 +167,7 @@
 				04A05F712944EA7100A27465 /* LaunchCollectionViewCell.swift */,
 				045B2000295A34A3004C5639 /* SettingsView.swift */,
 			);
-			path = Views;
+			path = CustomViews;
 			sourceTree = "<group>";
 		};
 		5B0B2159250A93B2B8AA3BC5 /* Pods */ = {
@@ -263,7 +305,10 @@
 				0488382C294267FC00A2D2A5 /* AppDelegate.swift in Sources */,
 				04A05F7A29450E2600A27465 /* LaunchesModel.swift in Sources */,
 				04A05F7829450E0800A27465 /* RocketModel.swift in Sources */,
-				04A05F7629450D9300A27465 /* NetworkManager.swift in Sources */,
+				045856512A043C7F00ECD020 /* Observable.swift in Sources */,
+				04A7957129C7DD7C00487027 /* UIView + Extension.swift in Sources */,
+				04A05F7629450D9300A27465 /* NetworkService.swift in Sources */,
+				045856542A043CD900ECD020 /* RocketViewModel.swift in Sources */,
 				04A05F702944E9AF00A27465 /* LaunchesViewController.swift in Sources */,
 				04A05F722944EA7100A27465 /* LaunchCollectionViewCell.swift in Sources */,
 				045B2001295A34A3004C5639 /* SettingsView.swift in Sources */,
@@ -271,7 +316,10 @@
 				04C0BE9529434E0E00100934 /* CollectionViewCell.swift in Sources */,
 				04A05F6E2944CB8600A27465 /* Header.swift in Sources */,
 				04B41A2F2945F1DB0052A08E /* PageViewController.swift in Sources */,
+				04A7957529C7DE5300487027 /* String + Extension.swift in Sources */,
 				0488382E294267FC00A2D2A5 /* SceneDelegate.swift in Sources */,
+				045856562A043CF500ECD020 /* LaunchesViewModel.swift in Sources */,
+				04A7956F29C7DD2100487027 /* UICollectionView + Extension.swift in Sources */,
 				04A05F742944FBD900A27465 /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -419,6 +467,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -447,6 +496,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

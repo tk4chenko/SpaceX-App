@@ -9,10 +9,9 @@ import UIKit
 
 class SettingsViewController: UIViewController {
     
-    weak var delegate: RefreshViewDelegate?
+    var reloadDara: (()->Void)?
     
     let userDefaults = UserDefaults.standard
-    let heightKey = "HeightKey"
     
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
@@ -50,12 +49,12 @@ class SettingsViewController: UIViewController {
         return view
     }()
     
-    private func reloadData() {
-        NotificationCenter.default.post(name: NotificationObserver.reloadData, object: nil)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        reloadDara?()
     }
-    
+
     @objc func buttonAction() {
-        reloadData()
         self.dismiss(animated: true)
     }
     

@@ -22,21 +22,19 @@ enum Settings: String, CaseIterable {
 
 class SettingsView: UIView {
     
-    var param: Settings!
+    var param: Settings?
     
     let userDefaults = UserDefaults()
     let heightKey = "HeightKey"
     
     override init(frame: CGRect) {
         super.init(frame: CGRect(x: 0, y: 0, width: 400, height: 40))
-//        self.backgroundColor = .green
         segmentController.addTarget(self, action: #selector(SettingsView.segmentTapped), for: .valueChanged)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     
     private lazy var segmentController: UISegmentedControl = {
         let items = ["m", "ft"]
@@ -63,9 +61,9 @@ class SettingsView: UIView {
     }()
     
     @objc func segmentTapped() {
+        print("TAPPED")
+        guard let param = self.param else { return }
         userDefaults.set(segmentController.selectedSegmentIndex, forKey: param.rawValue)
-        print(userDefaults.string(forKey: param.rawValue) ?? "")
-        print("PRESSED")
     }
     
     public func configure(param: Settings) {
@@ -77,7 +75,6 @@ class SettingsView: UIView {
         
         segmentController.setTitle(param.description[0], forSegmentAt: 0)
         segmentController.setTitle(param.description[1], forSegmentAt: 1)
-        
     }
     
     override func layoutSubviews() {
