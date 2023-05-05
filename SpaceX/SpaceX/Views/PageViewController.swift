@@ -25,8 +25,10 @@ class PageViewController: UIPageViewController {
         dataSource = self
         
         for i in 0...3 {
-            let vc = RocketViewController(index: i)
-            arrayOfControllers.append(vc)
+            let viewModel = RocketViewModel(networkSevice: NetworkService())
+            let viewController = RocketViewController(index: i)
+            viewController.viewModel = viewModel
+            arrayOfControllers.append(viewController)
         }
         
         setViewControllers([arrayOfControllers[0]], direction: .forward, animated: true)

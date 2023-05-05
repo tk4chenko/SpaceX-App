@@ -10,8 +10,9 @@ import SDWebImage
 
 final class RocketViewController: UIViewController {
     
+    var viewModel: RocketViewModelProtocol?
+    
     var index: Int?
-    var rocket: Rocket?
     
     public lazy var myCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
@@ -114,7 +115,8 @@ final class RocketViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        fetchData()
+        viewModel?.getRocket(by: index ?? 0)
+        setupBindings()
         
         myCollectionView.delegate = self
         myCollectionView.dataSource = self
@@ -136,16 +138,23 @@ final class RocketViewController: UIViewController {
         navView.alpha = offset
     }
     
-    func fetchData() {
-        NetworkService.shared.loadRockets(index: self.index ?? 0) { rocket in
-            self.rocket = rocket
-            self.navLabel.text = rocket.name
-            self.label.text = rocket.name
-            guard let url = URL(string: rocket.flickr_images?.randomElement() ?? "") else { return }
-            self.backgroundImage.sd_imageIndicator = SDWebImageActivityIndicator.gray
-            self.backgroundImage.sd_setImage(with: url, completed: nil)
-            self.myCollectionView.reloadData()
+    private func setupBindings() {
+        viewModel?.rocket.bind { [weak self] rocket in
+            if let rocket {
+                DispatchQueue.main.async {
+                    self?.setupUI(with: rocket)
+                }
+            }
         }
+    }
+    
+    func setupUI(with rocket: Rocket) {
+        self.navLabel.text = rocket.name
+        self.label.text = rocket.name
+        guard let url = URL(string: rocket.flickr_images?.randomElement() ?? "") else { return }
+        self.backgroundImage.sd_imageIndicator = SDWebImageActivityIndicator.gray
+        self.backgroundImage.sd_setImage(with: url, completed: nil)
+        self.myCollectionView.reloadData()
     }
     
     private func createLayout() -> UICollectionViewCompositionalLayout {
@@ -170,7 +179,7 @@ final class RocketViewController: UIViewController {
     
     @objc func buttonAction() {
         let vc = LaunchesViewController()
-        vc.configure(id: rocket?.id ?? "")
+        vc.configure(id: viewModel?.rocket.value?.id ?? "")
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -264,10 +273,10 @@ extension RocketViewController: UICollectionViewDelegate, UICollectionViewDataSo
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as? CollectionViewCell else { return
             UICollectionViewCell() }
         guard let cell2 = collectionView.dequeueReusableCell(withReuseIdentifier: SecondCollectionViewCell.identifier, for: indexPath) as? SecondCollectionViewCell else { return UICollectionViewCell() }
-        if let rocket = self.rocket {
+        if let rocket = viewModel?.rocket.value {
             switch indexPath.section {
             case 0:
-                    cell.configureCell(rocket: rocket, indexPath: indexPath, setting:  Settings.allCases[indexPath.row])
+                cell.configureCell(rocket: rocket, indexPath: indexPath, setting:  Settings.allCases[indexPath.row])
                 cell.alpha = 1
                 return cell
             case 1, 2, 3:
