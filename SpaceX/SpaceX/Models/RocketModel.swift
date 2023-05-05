@@ -12,16 +12,16 @@ struct Rocket: Decodable {
     let height: Diameter?
     let diameter: Diameter?
     let mass: Mass?
-    let first_stage: FirstStage?
-    let second_stage: SecondStage?
+    let firstStage: FirstStage?
+    let secondStage: SecondStage?
     let engines: Engines?
     let landingLegs: LandingLegs?
-    let payload_weights: [Mass]?
-    let flickr_images: [String]?
+    let payloadWeights: [Mass]?
+    let flickrImages: [String]?
     let name, type: String?
     let active: Bool?
-    let stages, boosters, cost_per_launch, successRatePct: Int?
-    let first_flight, country, company: String?
+    let stages, boosters, costPerLaunch, successRatePct: Int?
+    let firstFlight, country, company: String?
     let wikipedia: String?
     let welcomeDescription, id: String?
 }
@@ -65,8 +65,8 @@ extension Rocket {
         let thrustSeaLevel, thrustVacuum: Rocket.Engines.Thrust?
         let reusable: Bool?
         let engines: Int?
-        let fuel_amount_tons: Double?
-        let burn_time_sec: Int?
+        let fuelAmountTons: Double?
+        let burnTimeSec: Int?
     }
 }
 
@@ -97,8 +97,8 @@ extension Rocket {
         let payloads: Payloads?
         let reusable: Bool?
         let engines: Int?
-        let fuel_amount_tons: Double?
-        let burn_time_sec: Int?
+        let fuelAmountTons: Double?
+        let burnTimeSec: Int?
     }
 }
 

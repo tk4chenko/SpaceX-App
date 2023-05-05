@@ -27,7 +27,6 @@ class RocketViewModel: RocketViewModelProtocol {
     func getRocket(by index: Int) {
         networkService.get(urlString: "https://api.spacexdata.com/v4/rockets") { (result: Result<[Rocket], Error>) in
             switch result {
-                
             case .success(let result):
                 self.rocket.value = result[index]
                 print(result)

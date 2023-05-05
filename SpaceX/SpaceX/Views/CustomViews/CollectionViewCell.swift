@@ -64,7 +64,7 @@ class CollectionViewCell: UICollectionViewCell {
                 amountLabel.text = String(rocket.mass?.lb ?? 0)
             }
         case 3:
-            guard let payload = rocket.payload_weights else { return }
+            guard let payload = rocket.payloadWeights else { return }
             if int == 0 {
                 amountLabel.text = "\(payload[0].kg ?? 0)"
             } else {

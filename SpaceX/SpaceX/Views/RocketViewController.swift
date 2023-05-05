@@ -151,7 +151,7 @@ final class RocketViewController: UIViewController {
     func setupUI(with rocket: Rocket) {
         self.navLabel.text = rocket.name
         self.label.text = rocket.name
-        guard let url = URL(string: rocket.flickr_images?.randomElement() ?? "") else { return }
+        guard let url = URL(string: rocket.flickrImages?.randomElement() ?? "") else { return }
         self.backgroundImage.sd_imageIndicator = SDWebImageActivityIndicator.gray
         self.backgroundImage.sd_setImage(with: url, completed: nil)
         self.myCollectionView.reloadData()
