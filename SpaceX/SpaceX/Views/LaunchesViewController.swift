@@ -9,8 +9,7 @@ import UIKit
 
 class LaunchesViewController: UIViewController {
     
-    var id: String?
-    var launches: [Launch]?
+    var viewModel: LaunchesViewModel?
 
     private lazy var launchesCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
@@ -18,18 +17,6 @@ class LaunchesViewController: UIViewController {
         collectionView.backgroundColor = .black
         return collectionView
     }()
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.launches?.removeAll()
-        NetworkService.shared.loadLaunches(id: self.id ?? "") { launches in
-            if launches.count == 0 {
-                self.label.alpha = 1
-            }
-            self.launches = launches
-            self.launchesCollectionView.reloadData()
-        }
-    }
     
     private lazy var label: UILabel = {
         let label = UILabel()
@@ -43,19 +30,36 @@ class LaunchesViewController: UIViewController {
         return label
     }()
     
+    init(viewModel: LaunchesViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupUI()
+        fetchData()
+        setupBindings()
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupConstraints()
+    }
+    
+    private func setupUI() {
         view.backgroundColor = .black
-        
         title = "Launches"
         
         navigationController?.navigationBar.barStyle = UIBarStyle.black
         navigationController?.navigationBar.tintColor = UIColor.white
-    
+    }
+       
+    private func setupCollectionView() {
         view.addSubview(launchesCollectionView)
-        view.addSubview(label)
-        
         launchesCollectionView.frame = view.bounds
         
         launchesCollectionView.dataSource = self
@@ -64,9 +68,19 @@ class LaunchesViewController: UIViewController {
         launchesCollectionView.register(LaunchCollectionViewCell.self, forCellWithReuseIdentifier: LaunchCollectionViewCell.identifier)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        setupConstraints()
+    private func fetchData() {
+        viewModel?.getLaunches()
+    }
+    
+    private func setupBindings() {
+        viewModel?.launches.bind { [weak self] launches in
+            print(launches)
+            if launches != nil {
+                DispatchQueue.main.async {
+                    self?.launchesCollectionView.reloadData()
+                }
+            }
+        }
     }
     
     private func createLayout() -> UICollectionViewCompositionalLayout {
@@ -85,11 +99,8 @@ class LaunchesViewController: UIViewController {
             return layout
         }
     
-    func configure(id: String) {
-        self.id = id
-    }
-    
     private func setupConstraints() {
+        view.addSubview(label)
         NSLayoutConstraint.activate([
             label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
@@ -102,14 +113,16 @@ class LaunchesViewController: UIViewController {
 extension LaunchesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return launches?.count ?? 0
+        return viewModel?.launches.value?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LaunchCollectionViewCell.identifier, for: indexPath) as? LaunchCollectionViewCell else { return UICollectionViewCell() }
-        if let launches = self.launches {
-            cell.configure(launch: launches[indexPath.row])
+        if let launches = self.viewModel?.launches.value {
+            cell.configure(launch: launches[indexPath.item])
+            print(launches)
         }
+        
         return cell
     }
     

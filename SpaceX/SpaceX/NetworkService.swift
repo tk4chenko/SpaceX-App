@@ -6,44 +6,19 @@
 //
 
 import Foundation
-import Alamofire
 
 class NetworkService {
     
-    static let shared = NetworkService()
-    
-    func loadRockets(index: Int, completion: @escaping(Rocket) -> Void) {
-        AF.request("https://api.spacexdata.com/v4/rockets").responseDecodable(of: [Rocket].self) { response in
-            switch response.result {
-            case .success(let value):
-                completion(value[index])
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
-    func loadLaunches(id: String, completion: @escaping([Launch]) -> Void) {
-        AF.request("https://api.spacexdata.com/v4/launches", method: .get).responseDecodable(of: [Launch].self) { response in
-            switch response.result {
-            case .success(let value):
-                completion(value.filter({ $0.rocket == id }))
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
     func get<T: Decodable>(urlString: String, completion: @escaping(Result<T, Error>)-> Void) {
         guard let url = URL(string: urlString) else { return }
-        let request = URLRequest(url: url)
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
         let task = URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
             guard let data = data else { return }
             do {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let responce = try decoder.decode(T.self, from: data)
-                print(responce)
                 completion(.success(responce))
             } catch {
                 completion(.failure(error))

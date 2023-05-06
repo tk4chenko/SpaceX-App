@@ -12,8 +12,6 @@ final class RocketViewController: UIViewController {
     
     var viewModel: RocketViewModelProtocol?
     
-    var index: Int?
-    
     public lazy var myCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -103,19 +101,10 @@ final class RocketViewController: UIViewController {
         return button
     }()
     
-    init(index: Int) {
-        super.init(nibName: nil, bundle: nil)
-        self.index = index
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewModel?.getRocket(by: index ?? 0)
+        viewModel?.getRocket()
         setupBindings()
         
         myCollectionView.delegate = self
@@ -178,9 +167,10 @@ final class RocketViewController: UIViewController {
     }
     
     @objc func buttonAction() {
-        let vc = LaunchesViewController()
-        vc.configure(id: viewModel?.rocket.value?.id ?? "")
-        self.navigationController?.pushViewController(vc, animated: true)
+        let viewModel = LaunchesViewModel(networkSevice: NetworkService())
+        viewModel.id = self.viewModel?.rocket.value?.id ?? ""
+        let viewController = LaunchesViewController(viewModel: viewModel)
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
     
     private func setupConstraints() {
@@ -239,8 +229,8 @@ final class RocketViewController: UIViewController {
             navLabel.bottomAnchor.constraint(equalTo: navView.bottomAnchor, constant: -10)
         ])
     }
-    
 }
+
 extension RocketViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {

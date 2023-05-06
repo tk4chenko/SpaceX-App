@@ -24,9 +24,10 @@ class PageViewController: UIPageViewController {
         
         dataSource = self
         
-        for i in 0...3 {
+        for index in 0...3 {
             let viewModel = RocketViewModel(networkSevice: NetworkService())
-            let viewController = RocketViewController(index: i)
+            viewModel.index = index
+            let viewController = RocketViewController()
             viewController.viewModel = viewModel
             arrayOfControllers.append(viewController)
         }

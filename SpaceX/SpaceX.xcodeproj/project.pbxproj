@@ -115,8 +115,8 @@
 			children = (
 				04A05F7529450D9300A27465 /* NetworkService.swift */,
 				04B41A302945F1E10052A08E /* Models */,
-				045856522A043CC900ECD020 /* ViewModels */,
 				04B41A312945F1E80052A08E /* Views */,
+				045856522A043CC900ECD020 /* ViewModels */,
 				04A7957329C7DD9600487027 /* Extension */,
 				0488382B294267FC00A2D2A5 /* AppDelegate.swift */,
 				0488382D294267FC00A2D2A5 /* SceneDelegate.swift */,

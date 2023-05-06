@@ -30,7 +30,6 @@ struct Diameter: Decodable {
     let meters, feet: Double?
 }
 
-
 extension Rocket {
     // MARK: - Engines
     struct Engines: Decodable {
