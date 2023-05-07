@@ -15,15 +15,13 @@ struct Rocket: Decodable {
     let firstStage: FirstStage?
     let secondStage: SecondStage?
     let engines: Engines?
-    let landingLegs: LandingLegs?
     let payloadWeights: [Mass]?
     let flickrImages: [String]?
-    let name, type: String?
+    let name: String?
     let active: Bool?
-    let stages, boosters, costPerLaunch, successRatePct: Int?
+    let costPerLaunch: Int?
     let firstFlight, country, company: String?
-    let wikipedia: String?
-    let welcomeDescription, id: String?
+    let id: String?
 }
 
 struct Diameter: Decodable {

@@ -9,7 +9,7 @@ import UIKit
 
 class LaunchCollectionViewCell: UICollectionViewCell {
     
-    static var identifier = "LaunchCell"
+    static var identifier = String(describing: LaunchCollectionViewCell.self)
     
     private lazy var rocketImage: UIImageView = {
         let imageView = UIImageView()
@@ -55,10 +55,10 @@ class LaunchCollectionViewCell: UICollectionViewCell {
     }
     
     public func configure(launch: Launch) {
-        self.topLabel.text = launch.name ?? "huy"
-        let date = launch.date_local?.dropLast(15) ?? "pizda"
+        self.topLabel.text = launch.name ?? ""
+        let date = launch.dateLocal?.dropLast(15) ?? ""
         self.bottomLabel.text = String(date).formattedDate(withFormat: "MMM dd, yyyy")
-        if launch.success == true {
+        if launch.success ?? false {
             self.rocketImage.image = UIImage(named: "rocket")
         } else {
             self.rocketImage.image = UIImage(named: "rocketX")

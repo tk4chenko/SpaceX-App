@@ -9,24 +9,30 @@ import UIKit
 
 class LaunchesViewController: UIViewController {
     
-    var viewModel: LaunchesViewModel?
-
+    private let viewModel: LaunchesViewModel
+    
     private lazy var launchesCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .black
+        collectionView.backgroundColor = .clear
         return collectionView
     }()
     
-    private lazy var label: UILabel = {
+    private let loadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.style = .medium
+        indicator.color = .white
+        indicator.startAnimating()
+        return indicator
+    }()
+    
+    private let errorLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 1
-        label.text = "So far there have been no launches."
-        label.alpha = 0
-        label.textAlignment = .center
+        label.isHidden = true
         label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        label.textAlignment = .center
+        label.text = "So far there have been no launches."
+        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         return label
     }()
     
@@ -42,40 +48,46 @@ class LaunchesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupCollectionView()
         fetchData()
         setupBindings()
     }
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        setupConstraints()
-    }
     
     private func setupUI() {
-        view.backgroundColor = .black
         title = "Launches"
-        
+        view.backgroundColor = .black
+        view.addSubview(errorLabel)
+        view.addSubview(loadingIndicator)
+        errorLabel.frame = view.bounds
+        loadingIndicator.frame = view.bounds
         navigationController?.navigationBar.barStyle = UIBarStyle.black
         navigationController?.navigationBar.tintColor = UIColor.white
     }
-       
+    
     private func setupCollectionView() {
         view.addSubview(launchesCollectionView)
         launchesCollectionView.frame = view.bounds
-        
         launchesCollectionView.dataSource = self
         launchesCollectionView.delegate = self
-
         launchesCollectionView.register(LaunchCollectionViewCell.self, forCellWithReuseIdentifier: LaunchCollectionViewCell.identifier)
     }
     
     private func fetchData() {
-        viewModel?.getLaunches()
+        viewModel.getLaunches()
     }
     
     private func setupBindings() {
-        viewModel?.launches.bind { [weak self] launches in
-            print(launches)
-            if launches != nil {
+        viewModel.launches.bind { [weak self] launches in
+            guard let launches else { return }
+            DispatchQueue.main.async {
+                self?.loadingIndicator.stopAnimating()
+                self?.loadingIndicator.removeFromSuperview()
+            }
+            if launches.isEmpty {
+                DispatchQueue.main.async {
+                    self?.errorLabel.isHidden = false
+                }
+            } else {
                 DispatchQueue.main.async {
                     self?.launchesCollectionView.reloadData()
                 }
@@ -84,46 +96,36 @@ class LaunchesViewController: UIViewController {
     }
     
     private func createLayout() -> UICollectionViewCompositionalLayout {
-            let itemSize = NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(1.0))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(116))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-            group.contentInsets.bottom = 16
-            group.contentInsets.leading = 32
-            group.contentInsets.trailing = 32
-            let section = NSCollectionLayoutSection(group: group)
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                              heightDimension: .fractionalHeight(1.0)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                               heightDimension: .absolute(116)
+        )
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+                                                       subitems: [item]
+        )
+        group.contentInsets.bottom = 16
+        group.contentInsets.leading = 32
+        group.contentInsets.trailing = 32
+        let section = NSCollectionLayoutSection(group: group)
         section.contentInsets.top = 40
-            let layout = UICollectionViewCompositionalLayout(section: section)
-            return layout
-        }
-    
-    private func setupConstraints() {
-        view.addSubview(label)
-        NSLayoutConstraint.activate([
-            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
-            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-            label.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
-            label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
-        ])
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        return layout
     }
 }
 
 extension LaunchesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel?.launches.value?.count ?? 0
+        return viewModel.launches.value?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LaunchCollectionViewCell.identifier, for: indexPath) as? LaunchCollectionViewCell else { return UICollectionViewCell() }
-        if let launches = self.viewModel?.launches.value {
+        if let launches = self.viewModel.launches.value {
             cell.configure(launch: launches[indexPath.item])
-            print(launches)
         }
-        
         return cell
     }
-    
 }

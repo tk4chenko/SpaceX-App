@@ -6,27 +6,26 @@
 //
 
 import UIKit
-import SDWebImage
 
 final class RocketViewController: UIViewController {
     
-    var viewModel: RocketViewModelProtocol?
+    private let viewModel: RocketViewModelProtocol
     
-    public lazy var myCollectionView: UICollectionView = {
+    private lazy var myCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.createLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
         return collectionView
     }()
     
-    private lazy var navView: UIView = {
+    private let navView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.addBlur(style: .systemChromeMaterialDark)
         return view
     }()
     
-    private lazy var navLabel: UILabel = {
+    private let navLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
@@ -48,28 +47,30 @@ final class RocketViewController: UIViewController {
         return imageView
     }()
     
-    private lazy var backgroundImage: UIImageView = {
+    private let backgroundImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleToFill
         return imageView
     }()
     
-    private lazy var contentView: UIView = {
+    private let contentView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    private lazy var backgroundView: UIView = {
+    private let backgroundView: UIView = {
         let view = UIView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .black
         view.layer.cornerRadius = 32
+        view.clipsToBounds = true
+        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         return view
     }()
     
-    private lazy var label: UILabel = {
+    private let label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 1
@@ -81,12 +82,11 @@ final class RocketViewController: UIViewController {
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.backgroundColor = .clear
         scrollView.delegate = self
-        scrollView.isPagingEnabled = true
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.autoresizingMask = .flexibleHeight
+        scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
+        scrollView.contentInsetAdjustmentBehavior = .never
         return scrollView
     }()
     
@@ -101,12 +101,29 @@ final class RocketViewController: UIViewController {
         return button
     }()
     
+    init(viewModel: RocketViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        viewModel?.getRocket()
+        view.backgroundColor = .black
+        setupCollectionView()
+        fetchData()
         setupBindings()
-        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupConstraints()
+    }
+    
+    private func setupCollectionView() {
         myCollectionView.delegate = self
         myCollectionView.dataSource = self
         
@@ -115,20 +132,12 @@ final class RocketViewController: UIViewController {
         myCollectionView.register(Header.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Header.headerID)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        setupConstraints()
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offset = ((scrollView.contentOffset.y - view.frame.height / 2) + 100) / (label.frame.height + 48)
-        let clearToWhite = UIColor(red: 1, green: 1, blue: 1, alpha: offset)
-        navLabel.textColor = clearToWhite
-        navView.alpha = offset
+    private func fetchData() {
+        viewModel.getRocket()
     }
     
     private func setupBindings() {
-        viewModel?.rocket.bind { [weak self] rocket in
+        viewModel.rocket.bind { [weak self] rocket in
             if let rocket {
                 DispatchQueue.main.async {
                     self?.setupUI(with: rocket)
@@ -137,12 +146,12 @@ final class RocketViewController: UIViewController {
         }
     }
     
-    func setupUI(with rocket: Rocket) {
+    private func setupUI(with rocket: Rocket) {
         self.navLabel.text = rocket.name
         self.label.text = rocket.name
-        guard let url = URL(string: rocket.flickrImages?.randomElement() ?? "") else { return }
-        self.backgroundImage.sd_imageIndicator = SDWebImageActivityIndicator.gray
-        self.backgroundImage.sd_setImage(with: url, completed: nil)
+        if let url = URL(string: rocket.flickrImages?.randomElement() ?? "") {
+            self.backgroundImage.loadImage(from: url)
+        }
         self.myCollectionView.reloadData()
     }
     
@@ -168,53 +177,51 @@ final class RocketViewController: UIViewController {
     
     @objc func buttonAction() {
         let viewModel = LaunchesViewModel(networkSevice: NetworkService())
-        viewModel.id = self.viewModel?.rocket.value?.id ?? ""
+        viewModel.id = self.viewModel.rocket.value?.id ?? ""
         let viewController = LaunchesViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(viewController, animated: true)
     }
     
     private func setupConstraints() {
-        view.addSubview(backgroundImage)
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        contentView.addSubview(backgroundView)
-        backgroundView.addSubviews([label, settingsImage, button, myCollectionView])
+        contentView.addSubviews([backgroundImage, backgroundView, label, settingsImage, button, myCollectionView])
         view.addSubview(navView)
         navView.addSubview(navLabel)
-        
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0),
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.heightAnchor.constraint(equalToConstant: 1280),
             
+            backgroundImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            backgroundImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            backgroundImage.topAnchor.constraint(equalTo: contentView.topAnchor),
+            backgroundImage.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.54),
+            
             backgroundView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            backgroundView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: view.frame.height/2),
+            backgroundView.topAnchor.constraint(equalTo: backgroundImage.bottomAnchor, constant: -32),
             backgroundView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             backgroundView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            backgroundImage.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            backgroundImage.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            backgroundImage.topAnchor.constraint(equalTo: view.topAnchor),
+            label.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 32),
+            label.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 48),
             
             myCollectionView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 32),
-            myCollectionView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: 0),
-            myCollectionView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 0),
+            myCollectionView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor),
+            myCollectionView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor),
             myCollectionView.bottomAnchor.constraint(equalTo: button.topAnchor, constant: -16),
             
             button.heightAnchor.constraint(equalToConstant: 56),
             button.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -32),
             button.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 32),
-            button.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -20),
-            
-            label.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 32),
-            label.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 48),
+            button.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -24),
             
             settingsImage.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -35),
             settingsImage.centerYAnchor.constraint(equalTo: label.centerYAnchor),
@@ -228,6 +235,15 @@ final class RocketViewController: UIViewController {
             navLabel.widthAnchor.constraint(equalToConstant: view.frame.width),
             navLabel.bottomAnchor.constraint(equalTo: navView.bottomAnchor, constant: -10)
         ])
+    }
+}
+
+extension RocketViewController {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offset = ((scrollView.contentOffset.y - view.frame.height / 2) + 100) / (label.frame.height + 48)
+        let clearToWhite = UIColor(red: 1, green: 1, blue: 1, alpha: offset)
+        navLabel.textColor = clearToWhite
+        navView.alpha = offset
     }
 }
 
@@ -263,7 +279,7 @@ extension RocketViewController: UICollectionViewDelegate, UICollectionViewDataSo
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as? CollectionViewCell else { return
             UICollectionViewCell() }
         guard let cell2 = collectionView.dequeueReusableCell(withReuseIdentifier: SecondCollectionViewCell.identifier, for: indexPath) as? SecondCollectionViewCell else { return UICollectionViewCell() }
-        if let rocket = viewModel?.rocket.value {
+        if let rocket = viewModel.rocket.value {
             switch indexPath.section {
             case 0:
                 cell.configureCell(rocket: rocket, indexPath: indexPath, setting:  Settings.allCases[indexPath.row])

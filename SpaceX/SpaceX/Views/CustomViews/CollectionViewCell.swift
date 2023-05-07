@@ -87,10 +87,10 @@ class CollectionViewCell: UICollectionViewCell {
         mainView.addSubview(unitLabel)
         
         NSLayoutConstraint.activate([
-            mainView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
-            mainView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 16),
-            mainView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            mainView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
+            mainView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            mainView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            mainView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            mainView.topAnchor.constraint(equalTo: contentView.topAnchor),
             
             amountLabel.centerYAnchor.constraint(equalTo: mainView.centerYAnchor, constant: -10),
             amountLabel.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -8),

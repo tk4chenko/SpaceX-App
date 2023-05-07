@@ -14,10 +14,12 @@ extension UICollectionView {
             widthDimension: .fractionalWidth(1.0),
             heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = .init(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
         let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(116), heightDimension: .absolute(116))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.contentInsets = .init(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
         let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets.leading = 20
+        section.contentInsets.trailing = 12
         section.orthogonalScrollingBehavior = .continuous
         return section
     }

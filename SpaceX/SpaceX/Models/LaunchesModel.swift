@@ -14,6 +14,6 @@ struct Launch: Decodable {
     let rocket: String?
     let success: Bool?
     let name: String?
-    let date_local: String?
+    let dateLocal: String?
     let id: String
 }

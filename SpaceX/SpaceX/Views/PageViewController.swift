@@ -9,7 +9,7 @@ import UIKit
 
 class PageViewController: UIPageViewController {
     
-    var arrayOfControllers = [UIViewController]()
+    private var arrayOfControllers = [UIViewController]()
     
     override init(transitionStyle style: UIPageViewController.TransitionStyle, navigationOrientation: UIPageViewController.NavigationOrientation, options: [UIPageViewController.OptionsKey : Any]? = nil) {
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal)
@@ -27,8 +27,7 @@ class PageViewController: UIPageViewController {
         for index in 0...3 {
             let viewModel = RocketViewModel(networkSevice: NetworkService())
             viewModel.index = index
-            let viewController = RocketViewController()
-            viewController.viewModel = viewModel
+            let viewController = RocketViewController(viewModel: viewModel)
             arrayOfControllers.append(viewController)
         }
         
@@ -39,7 +38,6 @@ class PageViewController: UIPageViewController {
 }
 
 extension PageViewController: UIPageViewControllerDataSource {
-
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         if let index = arrayOfControllers.firstIndex(of: viewController) {
             if index > 0 {
@@ -57,7 +55,6 @@ extension PageViewController: UIPageViewControllerDataSource {
         }
         return nil
     }
-    
     func presentationCount(for pageViewController: UIPageViewController) -> Int {
         return arrayOfControllers.count
     }
